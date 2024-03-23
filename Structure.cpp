@@ -3,7 +3,7 @@
 #include<iostream>
 using namespace std;
 
-//box definitiondda
+//box definition
 char box[5][12] = {
     {" --------- "},
     {"|         |"},

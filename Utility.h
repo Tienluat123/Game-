@@ -8,11 +8,12 @@
 #include <Structure.h>
 using namespace std;
 
+void sortLeaderBoard(Player [], int);
 void printLeaderBoard(string);
 void writeLeaderBoard(Player, string);
 void getPlayerInfor(Player&);
 void displayStatus(bool);
-void getBG(char [][41]);
-void displayBG(char [][41], int, int);
+void getNormalBg(char [][41]);
+void displayNormalBg(char [][41], int, int);
 int menu();
 #endif

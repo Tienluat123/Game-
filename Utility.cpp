@@ -1,6 +1,17 @@
-#include <Utility.h>
+#include "Utility.h"
 #include <iostream>
 #include <conio.h>
+
+//sort the leaderboard
+void sortLeaderBoard (Player list[], int n){
+    for (int i = 0; i < n - 1; i++){
+        for (int j = i + 1; j < n; j++){
+            if (list[i].point < list[j].point){
+                swap(list[i], list[j]);
+            }
+        }
+    }
+}
 
 //read the file adn print the leaderboard on the console
 void printLeaderBoard(string filename) {
@@ -50,7 +61,7 @@ void writeLeaderBoard(Player p, string filename) {
     ifstream fin(filename);
     //if the file is opened
     if (fin) {
-        Player* list = new Player[10];
+        Player* list = new Player[11];
         int no_player = 0;
         string s;
 
@@ -62,32 +73,59 @@ void writeLeaderBoard(Player p, string filename) {
             no_player++;
         }
 
-        //update the new entry 
-        //get the position of the new entry in the leaderboard
-        int index = no_player - 1;
-        for (index; index >= 0; index--) {
-            if (p.point <= list[index].point) {
-                break;
+        //update the new entry
+        bool found = false;
+        //if the player already have account then update the point
+        for (int i = 0; i < no_player; i++){
+            if (p.name == list[i].name){
+                found = true;
+                if (p.point > list[i].point){
+                    list[i].point = p.point;
+                    break;
+                }
             }
+        }
+        //if the player is new and the leaderboard is not full, add new player into the leaderboard
+        if (found == false && no_player < 10){
+            list[no_player].name = p.name;
+            list[no_player].point = p.point;
+            no_player++;
+        //if the leaderboard is full, add new player into the board and sort the board, after that take 10 highest score 
+        } else if (found == false && no_player > 10){
+            list[no_player].name = p.name;
+            list[no_player].point = p.point;
+            no_player++;
+            sortLeaderBoard(list, no_player);
+            no_player--;
         }
 
-        //if the quantity of the leaderboard is not over 10, insert the new entry into the leaderboard
-        if (no_player < 10) {
-            for (int i = no_player; i > index + 1; i--) {
-                list[i] = list[i - 1];
-            }
-            list[index + 1] = p;
-            no_player++;
-        }
-        else {
-            //if the quantity is over 10, the new player's points are higher than the points of the player at the lowest position, the function inserts the new player entry at the determined index
-            if (index != no_player - 1) {
-                for (int i = no_player - 1; i > index + 1; i--) {
-                    list[i] = list[i - 1];
-                }
-                list[index + 1] = p;
-            }
-        }
+        sortLeaderBoard(list, no_player);
+
+        //get the position of the new entry in the leaderboard
+        // int index = no_player - 1;
+        // for (index; index >= 0; index--) {
+        //     if (p.point <= list[index].point) {
+        //         break;
+        //     }
+        // }
+
+        // //if the quantity of the leaderboard is not over 10, insert the new entry into the leaderboard
+        // if (no_player < 10) {
+        //     for (int i = no_player; i > index + 1; i--) {
+        //         list[i] = list[i - 1];
+        //     }
+        //     list[index + 1] = p;
+        //     no_player++;
+        // }
+        // else {
+        //     //if the quantity is over 10, the new player's points are higher than the points of the player at the lowest position, the function inserts the new player entry at the determined index
+        //     if (index != no_player - 1) {
+        //         for (int i = no_player - 1; i > index + 1; i--) {
+        //             list[i] = list[i - 1];
+        //         }
+        //         list[index + 1] = p;
+        //     }
+        // }
         fin.close();
 
         //write the new information into the file
@@ -147,6 +185,39 @@ void displayStatus(bool win) {
         cout << " /_/\\____/\\____/ /____/\\____/___/___/";
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
     }
+}
+
+// get the background of the board
+void getNormalBg(char bg[][41]) {
+    ifstream fin("pika.txt");
+    if (fin) {
+        for (int i = 0; i < 20; i++)
+        {
+            for (int j = 0; j < 41; j++)
+            {
+                bg[i][j] = fin.get();
+            }
+            fin.ignore();
+        }
+        fin.close();
+    }
+    else {
+        //If the file doesn't exist, it fills the bg array with space characters
+        memset(bg, ' ', sizeof(bg));
+    }
+}
+
+//display the background on the console
+void displayNormalBg(char bg[][41], int x, int y) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 11; j++) {
+            goToXY((x + 1) * 10 + j, (y + 1) * 4 + i);
+            cout << bg[y * 4 + i][x * 10 + j];
+        }
+    }
+    //after printing the background image, it resets the text attribute to the default color
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
 //display the menu of the game on the console

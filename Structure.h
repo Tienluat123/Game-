@@ -28,7 +28,7 @@ struct Player {
 	int point, life;
 };
 
-//struct for the first box when player choose
+//struct for the pointer array
 struct Cell_1 {
 	int i, j;
 	char c = ' ';
@@ -38,7 +38,7 @@ struct Cell_1 {
 	void deleteBox();
 };
 
-//struct for the second box when player choose
+//struct for the linked list array
 struct Cell_2 {
 	int i, j;
 	char c = ' ';

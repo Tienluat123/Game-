@@ -7,15 +7,16 @@ using namespace std;
 
 //define the width and length of the game board
 #define BOARDWIDTH 8
-#define BOARDHEIGTH 5
+#define BOARDHEIGHT 5
 
-//define the specific numbers for the keys
+//define the specific numbers for the keys based on ASCII
 #define KEY_UP 72
 #define KEY_DOWN 80
 #define KEY_LEFT 75
 #define KEY_RIGHT 77
 #define ESC_KEY 27
 #define ENTER_KEY 13
+#define SPACE_KEY 32
 
 //struct for position
 struct Position {

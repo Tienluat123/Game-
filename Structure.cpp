@@ -1,9 +1,9 @@
-#include"Structure.h"
+#include "Structure.h"
 #include "Setting.h"
 #include<iostream>
 using namespace std;
 
-//box definitiondda
+//box definition
 char box[5][12] = {
     {" --------- "},
     {"|         |"},
@@ -42,7 +42,7 @@ void Cell_1::drawBox (int color){
     }
 }
 
-//delete box if the player's move is correct
+//delete box 
 void Cell_1::deleteBox() {
     int x = j + 1, y = i + 1;
 

@@ -1,4 +1,4 @@
-#include <Setting.h>
+#include "Setting.h"
 
 //move the cursor to a specific position on the console
 void goToXY (int x, int y){

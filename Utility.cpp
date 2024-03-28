@@ -14,15 +14,24 @@ void sortLeaderBoard (Player list[], int n){
 }
 
 //read the file adn print the leaderboard on the console
-void printLeaderBoard(string filename) {
+void printLeaderBoard(char &c) {
     //print the title of the leaderboard
+    cout << "Which mode you want to see? (N/H): ";
+    cin >> c;
+    string filename;
+    if (c == 'n' || c == 'N'){
+        filename = "Normal.txt";
+    } else {
+        filename = "Hard.txt";
+    }
+
     goToXY(60, 5);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
     cout << "LEADERBOARD";
-    goToXY(30, 6);
+    goToXY(30, 10);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
     cout << "NAME";
-    goToXY(100, 6);
+    goToXY(100, 10);
     cout << "POINT";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
     goToXY(30, 7);
@@ -40,6 +49,7 @@ void printLeaderBoard(string filename) {
             f >> p.point;
             f.get();
             goToXY(30, 7 + i);
+            //change the text color for 3 highest player
             if (i <= 4) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4 - i / 2);
             goToXY(30, 8 + i);
             cout << p.name;
@@ -69,7 +79,7 @@ void writeLeaderBoard(Player p, string filename) {
         while (getline(fin, s, ' ')) {
             list[no_player].name = s;
             fin >> list[no_player].point;
-            fin.get();
+            fin.ignore();
             no_player++;
         }
 
@@ -91,12 +101,12 @@ void writeLeaderBoard(Player p, string filename) {
             list[no_player].point = p.point;
             no_player++;
         //if the leaderboard is full, add new player into the board and sort the board, after that take 10 highest score 
-        } else if (found == false && no_player > 10){
-            list[no_player].name = p.name;
-            list[no_player].point = p.point;
-            no_player++;
+        } else if (found == false && no_player >= 10){
             sortLeaderBoard(list, no_player);
-            no_player--;
+            if (list[no_player - 1].point < p.point){
+                list[no_player - 1].name = p.name;
+                list[no_player - 1].point = p.point;
+            }
         }
 
         sortLeaderBoard(list, no_player);
@@ -187,7 +197,7 @@ void displayStatus(bool win) {
     }
 }
 
-// get the background of the board
+// get the background of the board (normal mode)
 void getNormalBg(char bg[][41]) {
     ifstream fin("pika.txt");
     if (fin) {
@@ -207,8 +217,41 @@ void getNormalBg(char bg[][41]) {
     }
 }
 
-//display the background on the console
+//display the background on the console (normal mode)
 void displayNormalBg(char bg[][41], int x, int y) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 11; j++) {
+            goToXY((x + 1) * 10 + j, (y + 1) * 4 + i);
+            cout << bg[y * 4 + i][x * 10 + j];
+        }
+    }
+    //after printing the background image, it resets the text attribute to the default color
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+}
+
+//get the background of the the board (hard mode)
+void getHardBg(char bg[][51]) {
+    ifstream fin("hcmus.txt");
+    if (fin) {
+        for (int i = 0; i < 26; i++)
+        {
+            for (int j = 0; j < 51; j++)
+            {
+                bg[i][j] = fin.get();
+            }
+            fin.ignore();
+        }
+        fin.close();
+    }
+    else {
+        //If the file doesn't exist, it fills the bg array with space characters
+        memset(bg, ' ', sizeof(bg));
+    }
+}
+
+//display the background on the console (hard mode)
+void displayHardBg(char bg[][51], int x, int y) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 11; j++) {

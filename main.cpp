@@ -1,4 +1,5 @@
 #include "Normal.h"
+#include "Hard.h"
 
 int main (){
     initWindow(1000, 500);
@@ -14,6 +15,8 @@ int main (){
             normalMode(p);
             break;
         case 1:
+            getPlayerInfor(p);
+            hardMode(p);
             break;
         case 2: 
             char c;

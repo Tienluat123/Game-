@@ -4,150 +4,144 @@ using namespace std;
 
 char bg[20][41];
 
-//initialize the board for normal mode
-void initBoard(Cell_1** a){
+//initialize the board for the normal mode
+void initBoard(Cell_1** board) {
     //dynamic allocate the board and asign the coord for each box
-    for (int i = 0; i < BOARDHEIGHT; i++){
-        a[i] = new Cell_1[BOARDWIDTH];
-        for (int j = 0; j < BOARDWIDTH; j++){
-            a[i][j].i = i;
-            a[i][j].j = j;
+    for (int i = 0; i < BOARDHEIGHT; i++) {
+        board[i] = new Cell_1[BOARDWIDTH];
+        for (int j = 0; j < BOARDWIDTH; j++) {
+            board[i][j].j = j;
+            board[i][j].i = i;
         }
     }
 
     //assign a character for each box in the board
-    int count = (BOARDWIDTH * BOARDHEIGHT) / 2;
-    while (count){
+    int flagNum = (BOARDWIDTH * BOARDHEIGHT) / 2;
+    while (flagNum) { 
         //the index and the time that character appears
-        int idx, time = 2;
-        //random to get the character
-        char ch = 65 + rand() % 26;
+        int index, time = 2;
+        //random the character
+        char c = 65 + rand() % 26;
         //assign the character into the board
-        while (time){
-            //get random index in the board
-            idx = rand() % 40;
-            //check if that index already had a character or not
-            if (a[idx / 8][idx % 8].c == ' '){
-                a[idx / 8][idx % 8].c = ch;
+        while (time) {
+            //get the random coord 
+            index = rand() % 40;
+            if (board[index / 8][index % 8].c == ' ') {
+                board[index / 8][index % 8].c = c;
                 time--;
             }
         }
-        count--;
+        flagNum--;
     }
 }
 
-//delete the board when game is over
-void deleteBoard(Cell_1** a){
-    for (int i = 0; i < BOARDHEIGHT; i++){
-        for (int j = 0; j < BOARDWIDTH; j++){
-            if (a[i][j].valid){
-                a[i][j].deleteBox();
-                if (j < 4)
-                    displayNormalBg(bg, j, i);
-                
-                Sleep(100);
+//delete the board when the game is over
+void deleteBoard(Cell_1** board) {
+    for (int i = 0; i < BOARDHEIGHT; i++) {
+        for (int j = 0; j < BOARDWIDTH; j++) {
+            //if there are still valid boxes, delete them
+            if (board[i][j].valid) {
+                board[i][j].deleteBox();
+                if (j < 4) displayNormalBg(bg, j, i);
+                Sleep(200);
             }
         }
     }
-    for (int i = 0; i < BOARDHEIGHT; i++){
-        delete[] a[i];
+
+    //deallocate the board
+    for (int i = 0; i < BOARDHEIGHT; i++) {
+        delete[]board[i];
     }
-    delete[] a;
+    delete[]board;
 }
 
-//delete the board when the player lose the stages
-// void deleteBoardWhenLose(Cell_1** a){
-//     //find the valid boxes that have not been deleted
-   
-    
-//     deleteBoard(a);
-// }
-
-void renderBoard (Cell_1** a){
-    for (int i = 0; i < BOARDHEIGHT; i++){
-        for (int j = 0; j < BOARDWIDTH; j++){
-            a[i][j].drawBox(112);
+//render the board
+void renderBoard(Cell_1** board) {
+    for (int i = 0; i < BOARDHEIGHT; i++) {
+        for (int j = 0; j < BOARDWIDTH; j++) {
+            board[i][j].drawBox(112);
         }
     }
 }
-
-//move
-void move (Cell_1** a, Position& pos, int& status, Player& p, Position select_pos[], int& pair){
+//movement
+void move(Cell_1** board, Position& pos, int& status, Player& p, Position selectedPos[], int& couple) {
     int temp, key;
     temp = _getch();
-
-    //if the pressed key is not arrow key
-    if (temp && temp != 224){
-        if (temp == ESC_KEY){
+    //if the pressed key is not special key (arrow key)
+    if (temp && temp != 224) {
+        //if pressed ESC
+        if (temp == ESC_KEY) {
             status = 2;
-        } else if (temp == ENTER_KEY){
-            //check if the pair is wrong
-            if (pos.x == select_pos[0].x && pos.y == select_pos[0].y){
-                a[select_pos[0].y][select_pos[0].x].drawBox(70);
+        }
+        //if pressed ENTER
+        else if (temp == ENTER_KEY) {
+            if (pos.x == selectedPos[0].x && pos.y == selectedPos[0].y) {
+                board[selectedPos[0].y][selectedPos[0].x].drawBox(70);
                 Sleep(500);
 
-                a[select_pos[0].y][select_pos[0].x].selected = 0;
-                pair = 2;
-                select_pos[0] = {-1, -1};
+                board[selectedPos[0].y][selectedPos[0].x].selected = 0;
+                couple = 2;
+                selectedPos[0] = { -1, -1 };
                 p.life--;
-
                 goToXY(70, 0);
                 cout << "Life: " << p.life;
-            } else {
-                select_pos[2 - pair].x = pos.x;
-                select_pos[2 - pair].y = pos.y;
-                a[pos.y][pos.x].selected = 1;
-                pair--;
+            } 
+            //check the repetition
+            else {
+                selectedPos[2 - couple].x = pos.x;
+                selectedPos[2 - couple].y = pos.y;
+                board[pos.y][pos.x].selected = 1;
+                couple--;
 
-                //if the player have been chosen pair
-                if (pair == 0){
-                    if (a[select_pos[0].y][select_pos[0].x].c == a[select_pos[1].y][select_pos[1].y].c){
-                        if (allcheck(a, select_pos[0].y, select_pos[0].x, select_pos[1].y, select_pos[1].x)){
-                            p.point += 10;
+                //if players have chosen a pair
+                if (couple == 0) {
+                    if (board[selectedPos[0].y][selectedPos[0].x].c == board[selectedPos[1].y][selectedPos[1].x].c) {  // neu cap nay hop nhau
+                        if (allcheck(board, selectedPos[0].y, selectedPos[0].x, selectedPos[1].y, selectedPos[1].x)) {
+                            p.point += 20;
                             goToXY(40, 0);
                             cout << "Point: " << p.point;
 
-                            a[select_pos[0].y][select_pos[0].x].drawBox(40);
-                            a[select_pos[1].y][select_pos[1].x].drawBox(40);
+                            board[selectedPos[0].y][selectedPos[0].x].drawBox(40);
+                            board[selectedPos[1].y][selectedPos[1].x].drawBox(40);
                             Sleep(500);
 
-                            a[select_pos[0].y][select_pos[0].x].valid = 0;
-                            a[select_pos[0].y][select_pos[0].x].deleteBox();
-                            if (select_pos[0].x < 4)
-                                displayNormalBg(bg, select_pos[0].x, select_pos[0].y);
-                            a[select_pos[1].y][select_pos[1].x].valid = 0;
-                            a[select_pos[1].y][select_pos[1].x].deleteBox();
-                            if (select_pos[1].x < 4)
-                                displayNormalBg(bg, select_pos[1].x, select_pos[1].y); 
-                        } else {
-                            a[select_pos[0].y][select_pos[0].x].drawBox(70);
-                            a[select_pos[1].y][select_pos[1].x].drawBox(70);
+                            board[selectedPos[0].y][selectedPos[0].x].valid = 0;
+                            board[selectedPos[0].y][selectedPos[0].x].deleteBox();
+                            if (selectedPos[0].x < 4) displayNormalBg(bg, selectedPos[0].x, selectedPos[0].y);
+
+                            board[selectedPos[1].y][selectedPos[1].x].valid = 0;
+                            board[selectedPos[1].y][selectedPos[1].x].deleteBox();
+                            if (selectedPos[1].x < 4) displayNormalBg(bg, selectedPos[1].x, selectedPos[1].y);
+                        }
+                        else {
+                            board[selectedPos[0].y][selectedPos[0].x].drawBox(70);
+                            board[selectedPos[1].y][selectedPos[1].x].drawBox(70);
                             Sleep(500);
 
                             p.life--;
                             goToXY(70, 0);
                             cout << "Life: " << p.life;
                         }
-                    } else {
-                        a[select_pos[0].y][select_pos[0].x].drawBox(70);
-                        a[select_pos[1].y][select_pos[1].x].drawBox(70);
+                    }
+                    else {
+                        board[selectedPos[0].y][selectedPos[0].x].drawBox(70);
+                        board[selectedPos[1].y][selectedPos[1].x].drawBox(70);
                         Sleep(500);
 
                         p.life--;
                         goToXY(70, 0);
                         cout << "Life: " << p.life;
                     }
+                    // tra ve noi san xuat
+                    board[selectedPos[0].y][selectedPos[0].x].selected = 0;
+                    board[selectedPos[1].y][selectedPos[1].x].selected = 0;
+                    couple = 2;
+                    selectedPos[0] = { -1, -1 };
+                    selectedPos[1] = { -1, -1 };
 
-                    //return the
-                    a[select_pos[0].y][select_pos[0].x].selected = 0;
-                    a[select_pos[1].y][select_pos[1].x].selected = 0;
-                    pair = 2;
-                    select_pos[0] = {-1, -1};
-                    select_pos[1] = {-1, -1};
-
-                    for (int i = pos.y; i < BOARDHEIGHT; i++){
-                        for (int j = pos.x; i < BOARDWIDTH; j++){
-                            if (a[i][j].valid){
+                    for (int i = pos.y; i < BOARDHEIGHT; i++) {
+                        for (int j = pos.x; j < BOARDWIDTH; j++) {
+                            if (board[i][j].valid) {
                                 pos.x = j;
                                 pos.y = i;
                                 return;
@@ -155,9 +149,9 @@ void move (Cell_1** a, Position& pos, int& status, Player& p, Position select_po
                         }
                     }
 
-                    for (int i = 0; i <= pos.y; i++){
-                        for (int j = 0; j <= pos.x; j++){
-                            if (a[i][j].valid){
+                    for (int i = 0; i <= pos.y; i++) { // chuyen den CELL_1 o tren
+                        for (int j = 0; j <= pos.x; j++) {
+                            if (board[i][j].valid) {
                                 pos.x = j;
                                 pos.y = i;
                                 return;
@@ -167,259 +161,266 @@ void move (Cell_1** a, Position& pos, int& status, Player& p, Position select_po
                 }
             }
         }
-
-    // if the pressed key is arrow key  
-    } else {
-        //movement
-        //check if the box is chosen or not
-        if ((pos.y != select_pos[0].y || pos.x != select_pos[0].x) && (pos.y != select_pos[1].y || pos.x != select_pos[1].x))
+    }
+    else //if pressed keys are arrow keys
+    //movement
+    {
+        if ((pos.y != selectedPos[0].y || pos.x != selectedPos[0].x) && (pos.y != selectedPos[1].y || pos.x != selectedPos[1].x)) // ktra xem o nay co dang duoc chon hay khong
+            board[pos.y][pos.x].selected = 0;
+        switch (key = _getch())
         {
-            a[pos.y][pos.x].selected = 0;
-        }
-        //move the chosen box by pressing arrow keys
-        switch(key = _getch()){
-            case KEY_UP:
-                for (int i = pos.x; i < BOARDWIDTH; i++) {
-                    for (int j = pos.y - 1; j >= 0; j--) {
-                        if (a[j][i].valid) {
-                            pos.x = i;
-                            pos.y = j;
-                            return;
-                        }
+        case KEY_UP:
+            for (int i = pos.x; i < BOARDWIDTH; i++) {
+                for (int j = pos.y - 1; j >= 0; j--) {
+                    if (board[j][i].valid) {
+                        pos.x = i;
+                        pos.y = j;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.x - 1; i >= 0; i--) {
-                    for (int j = pos.y - 1; j >= 0; j--) {
-                        if (a[j][i].valid) {
-                            pos.x = i;
-                            pos.y = j;
-                            return;
-                        }
+            for (int i = pos.x - 1; i >= 0; i--) {
+                for (int j = pos.y - 1; j >= 0; j--) {
+                    if (board[j][i].valid) {
+                        pos.x = i;
+                        pos.y = j;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.x; i < BOARDWIDTH; i++) {
-                    for (int j = BOARDHEIGHT - 1; j > pos.y; j--) {
-                        if (a[j][i].valid) {
-                            pos.x = i;
-                            pos.y = j;
-                            return;
-                        }
+            for (int i = pos.x; i < BOARDWIDTH; i++) {
+                for (int j = BOARDHEIGHT - 1; j > pos.y; j--) {
+                    if (board[j][i].valid) {
+                        pos.x = i;
+                        pos.y = j;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.x; i >= 0; i--) {
-                    for (int j = BOARDHEIGHT - 1; j > pos.y; j--) {
-                        if (a[j][i].valid) {
-                            pos.x = i;
-                            pos.y = j;
-                            return;
-                        }
+            for (int i = pos.x; i >= 0; i--) {
+                for (int j = BOARDHEIGHT - 1; j > pos.y; j--) {
+                    if (board[j][i].valid) {
+                        pos.x = i;
+                        pos.y = j;
+                        return;
                     }
                 }
+            }
 
-                break;
-            case KEY_DOWN:
-                for (int i = pos.x; i < BOARDWIDTH; i++) {
-                    for (int j = pos.y + 1; j < BOARDHEIGHT; j++) {
-                        if (a[j][i].valid) {
-                            pos.x = i;
-                            pos.y = j;
-                            return;
-                        }
+            break;
+        case KEY_DOWN:
+            for (int i = pos.x; i < BOARDWIDTH; i++) {
+                for (int j = pos.y + 1; j < BOARDHEIGHT; j++) {
+                    if (board[j][i].valid) {
+                        pos.x = i;
+                        pos.y = j;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.x - 1; i >= 0; i--) {
-                    for (int j = pos.y + 1; j < BOARDHEIGHT; j++) {
-                        if (a[j][i].valid) {
-                            pos.x = i;
-                            pos.y = j;
-                            return;
-                        }
+            for (int i = pos.x - 1; i >= 0; i--) {
+                for (int j = pos.y + 1; j < BOARDHEIGHT; j++) {
+                    if (board[j][i].valid) {
+                        pos.x = i;
+                        pos.y = j;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.x; i < BOARDWIDTH; i++) {
-                    for (int j = 0; j < pos.y; j++) {
-                        if (a[j][i].valid) {
-                            pos.x = i;
-                            pos.y = j;
-                            return;
-                        }
+            for (int i = pos.x; i < BOARDWIDTH; i++) {
+                for (int j = 0; j < pos.y; j++) {
+                    if (board[j][i].valid) {
+                        pos.x = i;
+                        pos.y = j;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.x - 1; i >= 0; i--) {
-                    for (int j = 0; j < pos.y; j++) {
-                        if (a[j][i].valid) {
-                            pos.x = i;
-                            pos.y = j;
-                            return;
-                        }
+            for (int i = pos.x - 1; i >= 0; i--) {
+                for (int j = 0; j < pos.y; j++) {
+                    if (board[j][i].valid) {
+                        pos.x = i;
+                        pos.y = j;
+                        return;
                     }
                 }
-                break;
-            case KEY_LEFT:
-                for (int i = pos.y; i >= 0; i--) {
-                    for (int j = pos.x - 1; j >= 0; j--) {
-                        if (a[i][j].valid) {
-                            pos.x = j;
-                            pos.y = i;
-                            return;
-                        }
+            }
+            break;
+        case KEY_LEFT:
+            for (int i = pos.y; i >= 0; i--) {
+                for (int j = pos.x - 1; j >= 0; j--) {
+                    if (board[i][j].valid) {
+                        pos.x = j;
+                        pos.y = i;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.y + 1; i < BOARDHEIGHT; i++) {
-                    for (int j = pos.x - 1; j >= 0; j--) {
-                        if (a[i][j].valid) {
-                            pos.x = j;
-                            pos.y = i;
-                            return;
-                        }
+            for (int i = pos.y + 1; i < BOARDHEIGHT; i++) {
+                for (int j = pos.x - 1; j >= 0; j--) {
+                    if (board[i][j].valid) {
+                        pos.x = j;
+                        pos.y = i;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.y; i >= 0; i--) {
-                    for (int j = BOARDWIDTH - 1; j > pos.x; j--) {
-                        if (a[i][j].valid) {
-                            pos.x = j;
-                            pos.y = i;
-                            return;
-                        }
+            for (int i = pos.y; i >= 0; i--) {
+                for (int j = BOARDWIDTH - 1; j > pos.x; j--) {
+                    if (board[i][j].valid) {
+                        pos.x = j;
+                        pos.y = i;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.y + 1; i < BOARDHEIGHT; i++) {
-                    for (int j = BOARDWIDTH - 1; j > pos.x; j--) {
-                        if (a[i][j].valid) {
-                            pos.x = j;
-                            pos.y = i;
-                            return;
-                        }
+            for (int i = pos.y + 1; i < BOARDHEIGHT; i++) {
+                for (int j = BOARDWIDTH - 1; j > pos.x; j--) {
+                    if (board[i][j].valid) {
+                        pos.x = j;
+                        pos.y = i;
+                        return;
                     }
                 }
-                break;
-            case KEY_RIGHT:
-                for (int i = pos.y; i >= 0; i--) {
-                    for (int j = pos.x + 1; j < BOARDWIDTH; j++) {
-                        if (a[i][j].valid) {
-                            pos.x = j;
-                            pos.y = i;
-                            return;
-                        }
+            }
+            break;
+        case KEY_RIGHT:
+            for (int i = pos.y; i >= 0; i--) {
+                for (int j = pos.x + 1; j < BOARDWIDTH; j++) {
+                    if (board[i][j].valid) {
+                        pos.x = j;
+                        pos.y = i;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.y + 1; i < BOARDHEIGHT; i++) {
-                    for (int j = pos.x + 1; j < BOARDWIDTH; j++) {
-                        if (a[i][j].valid) {
-                            pos.x = j;
-                            pos.y = i;
-                            return;
-                        }
+            for (int i = pos.y + 1; i < BOARDHEIGHT; i++) {
+                for (int j = pos.x + 1; j < BOARDWIDTH; j++) {
+                    if (board[i][j].valid) {
+                        pos.x = j;
+                        pos.y = i;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.y; i >= 0; i--) {
-                    for (int j = 0; j < pos.x; j++) {
-                        if (a[i][j].valid) {
-                            pos.x = j;
-                            pos.y = i;
-                            return;
-                        }
+            for (int i = pos.y; i >= 0; i--) {
+                for (int j = 0; j < pos.x; j++) {
+                    if (board[i][j].valid) {
+                        pos.x = j;
+                        pos.y = i;
+                        return;
                     }
                 }
+            }
 
-                for (int i = pos.y + 1; i < BOARDHEIGHT; i++) {
-                    for (int j = 0; j < pos.x; j++) {
-                        if (a[i][j].valid) {
-                            pos.x = j;
-                            pos.y = i;
-                            return;
-                        }
+            for (int i = pos.y + 1; i < BOARDHEIGHT; i++) {
+                for (int j = 0; j < pos.x; j++) {
+                    if (board[i][j].valid) {
+                        pos.x = j;
+                        pos.y = i;
+                        return;
                     }
                 }
-                break;
-            default:
-                break;
+            }
+            break;
+        default:
+            break;
         }
     }
 }
 
-//display Normal mode
-void normalMode (Player& p){
+//the board of the normal mode
+void normalMode(Player& p) {
+    //get the background of normal mode
     srand(time(0));
     getNormalBg(bg);
 
-    Cell_1** a = new Cell_1* [BOARDHEIGHT];
-    initBoard(a);
+    //initialize the board
+    Cell_1** board = new Cell_1 * [BOARDHEIGHT];
+    initBoard(board);
 
+    //print the name, point and life on the screen
     goToXY(10, 0);
-    cout << "NAME: " << p.name;
+    cout << "Name: " << p.name;
     goToXY(40, 0);
-    cout << "POINT: " << p.point;
+    cout << "Point: " << p.point;
     goToXY(70, 0);
     cout << "Life: " << p.life;
 
+    //print the introduction on the screen
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
-    goToXY(92, 12);
-    cout << "Press arrow to move";
-    goToXY(92, 13);
-    cout << "Pren ENTER to delete";
-    goToXY(92, 14);
-    cout << "Press ESC to quit to menu";
+    goToXY(95, 12);
+    cout << "Press arrow key to move";
+    goToXY(95, 13);
+    cout << "Press Enter to delete";
+    goToXY(95, 14);
+    cout << "Press ESC to quit";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
-    Position select_pos[2] = {{-1, -1}, {-1, -1}};
-    int pair = 2;
-    Position cur_pos{0, 0};
-    //0 playing the game
-    //1 game over
-    //2 choose ESC to quit the game mode
-    int status = 0;
+    //the coord of 2 boxes that player have chosen
+    Position selectedPos[] = { {-1, -1}, {-1, -1} };
+    //counting how many box player have chosen
+    int couple = 2;
+    //current position of the box cursor
+    Position curPosition{ 0, 0 };
+    int status = 0; //0. playing game
+                    //1. game is over
+                    //2. players choose to exit
 
-    while (!status && p.life){
-        a[cur_pos.y][cur_pos.x].selected = 1;
+    //while status is 0 and life is not 0 
+    while (!status && p.life) {
+        board[curPosition.y][curPosition.x].selected = 1;
 
-        renderBoard(a);
+        renderBoard(board);
 
-        move(a, cur_pos, status, p, select_pos, pair);
+        move(board, curPosition, status, p, selectedPos, couple);
 
-        if (!checkValidPairs(a))
-            status = 1;
+        //if there are no valid pairs left, the game is over
+        if ((!checkValidPairs(board))) status = 1;
     }
 
-    renderBoard(a);
-    deleteBoard(a);
+    renderBoard(board);
+    deleteBoard(board);
     Sleep(500);
     system("cls");
 
-    //check the win condition
-    if (p.life != 0 && status == 1){
-        displayStatus(true);
+    //if players choose ESC
+    if (status == 2){
+        writeLeaderBoard(p, "Normal.txt");
+        Sleep(500);
+    }  
+    ///if the life is not 0 when finishing the board
+    else if (p.life != 0) {
+        //display win status
+        displayStatus(1);
         goToXY(50, 17);
+        //ask the players whether they want continue or not 
         char c;
-        //ask player to play more or not
         cout << "Do you want to continue next game? (Y/N): ";
         cin >> c;
         cin.ignore();
         system("cls");
-
-        //if they choose "yes", continue normal mode
-        //if they don't, exit normal mode and write the record into normal mode leaderboard
-        if (c == 'Y' || c == 'y')
-            normalMode(p);
-        else 
-            writeLeaderBoard(p, "Normal.txt");
-    //the lost condition
-    } else if (p.life == 0){
-        displayStatus(false);
-        writeLeaderBoard(p, "Normal.txt");
-        Sleep(2000);
+        if (c == 'y' || c == 'Y') normalMode(p);
+        //if they choose not, update the leaderboard
+        else writeLeaderBoard(p, "Normal.txt");
     }
-
+    //if the life is 0 or the status is 1
+    else if (p.life == 0 || status == 1) {
+        //display lose status and update the leaderboard
+        displayStatus(0);
+        writeLeaderBoard(p, "Normal.txt");
+        Sleep(500);
+    }
     system("cls");
 }

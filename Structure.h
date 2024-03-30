@@ -26,7 +26,7 @@ struct Position {
 //struct for player 
 struct Player {
 	string name = "";
-	int point, life;
+	int point = 0, life = 3;
 };
 
 //struct for the pointer array

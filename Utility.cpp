@@ -13,33 +13,41 @@ void sortLeaderBoard (Player list[], int n){
     }
 }
 
-//read the file adn print the leaderboard on the console
+//read the file and print the leaderboard on the console
 void printLeaderBoard(char &c) {
-    //print the title of the leaderboard
+    //choose the mode leaderboard 
+    goToXY(45, 15);
     cout << "Which mode you want to see? (N/H): ";
     cin >> c;
     string filename;
     if (c == 'n' || c == 'N'){
         filename = "Normal.txt";
-    } else {
+    } else if (c == 'h' || c == 'H'){
         filename = "Hard.txt";
+    } else {
+        system("cls");
+        return;
     }
+    system("cls");
 
+    //print title of the leaderboard
     goToXY(60, 5);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
     cout << "LEADERBOARD";
-    goToXY(30, 10);
+    goToXY(30, 6);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
     cout << "NAME";
-    goToXY(100, 10);
+    goToXY(100, 6);
     cout << "POINT";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
     goToXY(30, 7);
+    for (int i = 0; i < 75; i++) {
+        cout << "=";
+    }
 
     //open file to read
     ifstream f;
     f.open(filename);
-    //if the file is opened
     if (f) {
         Player p;
 
@@ -49,6 +57,9 @@ void printLeaderBoard(char &c) {
             f >> p.point;
             f.get();
             goToXY(30, 7 + i);
+            for (int j = 0; j < 75; j++) {
+                cout << "=";
+            }
             //change the text color for 3 highest player
             if (i <= 4) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4 - i / 2);
             goToXY(30, 8 + i);
@@ -111,31 +122,7 @@ void writeLeaderBoard(Player p, string filename) {
 
         sortLeaderBoard(list, no_player);
 
-        //get the position of the new entry in the leaderboard
-        // int index = no_player - 1;
-        // for (index; index >= 0; index--) {
-        //     if (p.point <= list[index].point) {
-        //         break;
-        //     }
-        // }
-
-        // //if the quantity of the leaderboard is not over 10, insert the new entry into the leaderboard
-        // if (no_player < 10) {
-        //     for (int i = no_player; i > index + 1; i--) {
-        //         list[i] = list[i - 1];
-        //     }
-        //     list[index + 1] = p;
-        //     no_player++;
-        // }
-        // else {
-        //     //if the quantity is over 10, the new player's points are higher than the points of the player at the lowest position, the function inserts the new player entry at the determined index
-        //     if (index != no_player - 1) {
-        //         for (int i = no_player - 1; i > index + 1; i--) {
-        //             list[i] = list[i - 1];
-        //         }
-        //         list[index + 1] = p;
-        //     }
-        // }
+        
         fin.close();
 
         //write the new information into the file
@@ -198,6 +185,7 @@ void displayStatus(bool win) {
 }
 
 // get the background of the board (normal mode)
+//store the background into a char array
 void getNormalBg(char bg[][41]) {
     ifstream fin("pika.txt");
     if (fin) {

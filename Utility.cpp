@@ -190,6 +190,8 @@ void getPlayerInfor(Player& p) {
 //display the status of the game on the console when the game is over
 void displayStatus(bool win) {
     if (win) {
+        //play win sound
+        PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\win.wav"), NULL, SND_FILENAME | SND_ASYNC);
         //print "you won" when variable "win" is true
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
         goToXY(50, 10);
@@ -203,6 +205,8 @@ void displayStatus(bool win) {
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
     }
     else {
+        //play lose sound
+        PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\lose.wav"), NULL, SND_FILENAME | SND_ASYNC);
         //print "you lose" when variable "win" is false
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
         goToXY(50, 10);
@@ -214,6 +218,10 @@ void displayStatus(bool win) {
         goToXY(50, 13);
         cout << " /_/\\____/\\____/ /____/\\____/___/___/";
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+        goToXY(50, 15);
+        cout << "Press any key to back to the main menu";
+        //pressed any key to back to the menu
+        _getch();
     }
 }
 
@@ -305,6 +313,9 @@ int menu() {
     cout << "|  |      |  | |  .  \\   /  _____  \\ |  `----.|  |  |  | |  `--'  |";
     goToXY(35, 7);
     cout << "| _|      |__| |__|\\__\\ /__/     \\__\\ \\______||__|  |__|  \\______/";
+
+    //Play background sound
+    PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\background.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
     //handle the choices of the user
     while (1) {

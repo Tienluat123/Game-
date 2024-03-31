@@ -90,6 +90,7 @@ void move(Cell_2** arr, Position& pos, int& status, Player& p, Position selected
         }
         //if pressed the ENTER
         else if (temp == ENTER_KEY) {
+            PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\enter.wav"), NULL, SND_FILENAME | SND_ASYNC);
             if (pos.x == selectedPos[0].x && pos.y == selectedPos[0].y) {
                 Cell_2* temp = findTheNode(arr, pos.y, pos.x);
                 temp->drawBox(70);
@@ -99,6 +100,7 @@ void move(Cell_2** arr, Position& pos, int& status, Player& p, Position selected
                 couple = 2;
                 selectedPos[0] = { -1, -1 };
                 p.life--;
+                PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 goToXY(70, 0);
                 cout << "Life: " << p.life;
             }
@@ -134,6 +136,7 @@ void move(Cell_2** arr, Position& pos, int& status, Player& p, Position selected
                             Sleep(500);
 
                             p.life--;
+                            PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                             goToXY(70, 0);
                             cout << "Life: " << p.life;
                         }
@@ -144,6 +147,7 @@ void move(Cell_2** arr, Position& pos, int& status, Player& p, Position selected
                         Sleep(500);
 
                         p.life--;
+                        PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                         goToXY(70, 0);
                         cout << "Life: " << p.life;
                     }
@@ -181,6 +185,7 @@ void move(Cell_2** arr, Position& pos, int& status, Player& p, Position selected
     //if the pressed key is arrow key
     else
     {
+        PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\move.wav"), NULL, SND_FILENAME | SND_ASYNC);
         //check if the box is chosen or not
         if ((pos.y != selectedPos[0].y || pos.x != selectedPos[0].x) && (pos.y != selectedPos[1].y || pos.x != selectedPos[1].x))
             findTheNode(arr, pos.y, pos.x)->selected = 0;
@@ -409,8 +414,8 @@ void hardMode(Player& p) {
         writeLeaderBoard(p, "Hard.txt");
         Sleep(500);
     }
-    //if the life is 0 or the status is 1
-    else if (p.life == 0 || status == 1) {
+    //if the life is 0 or the status is 1 and the max point of a board is not 400
+    else if (p.life == 0 || (status == 1 && p.point % 400 != 0)) {
         //display lose status and update the leaderboard
         displayStatus(0);
         writeLeaderBoard(p, "Hard.txt");

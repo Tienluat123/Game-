@@ -18,13 +18,6 @@ using namespace std;
 #define ENTER_KEY 13
 #define SPACE_KEY 32
 
-//define soundtrack
-#define MOVE_SOUND 0
-#define ENTER_SOUND 1
-#define ERROR_SOUND 2
-#define WIN_SOUND 4
-#define BACKGROUND_SOUND 5
-#define EFFECT_SOUND 6
 //struct for position
 struct Position {
 	int x, y;

@@ -75,6 +75,8 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
         }
         //if pressed ENTER
         else if (temp == ENTER_KEY) {
+            //play enter sound
+            PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\enter.wav"), NULL, SND_FILENAME | SND_ASYNC);
             if (pos.x == selectedPos[0].x && pos.y == selectedPos[0].y) {
                 board[selectedPos[0].y][selectedPos[0].x].drawBox(70);
                 Sleep(500);
@@ -83,6 +85,7 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
                 couple = 2;
                 selectedPos[0] = { -1, -1 };
                 p.life--;
+                PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 goToXY(70, 0);
                 cout << "Life: " << p.life;
             } 
@@ -122,6 +125,7 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
 
                             p.life--;
                             goToXY(70, 0);
+                            PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                             cout << "Life: " << p.life;
                         }
                     }
@@ -131,6 +135,7 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
                         Sleep(500);
 
                         p.life--;
+                        PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                         goToXY(70, 0);
                         cout << "Life: " << p.life;
                     }
@@ -181,6 +186,8 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
     else //if pressed keys are arrow keys
     //movement
     {
+        //play movement sound
+        PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\move.wav"), NULL, SND_FILENAME | SND_ASYNC);
         if ((pos.y != selectedPos[0].y || pos.x != selectedPos[0].x) && (pos.y != selectedPos[1].y || pos.x != selectedPos[1].x)) // ktra xem o nay co dang duoc chon hay khong
             board[pos.y][pos.x].selected = 0;
         switch (key = _getch())
@@ -419,8 +426,8 @@ void normalMode(Player& p) {
         writeLeaderBoard(p, "Normal.txt");
         Sleep(500);
     }  
-    //if the life is 0 or the status is 1
-    else if (p.life == 0 || status == 1) {
+    //if the life is 0 or the status is 1 and max point of a board is not 400
+    else if (p.life == 0 || (status == 1 && p.point % 400 != 0)) {
         //display lose status and update the leaderboard
         displayStatus(0);
         writeLeaderBoard(p, "Normal.txt");
@@ -441,5 +448,6 @@ void normalMode(Player& p) {
         //if they choose not, update the leaderboard
         else writeLeaderBoard(p, "Normal.txt");
     }
+
     system("cls");
 }

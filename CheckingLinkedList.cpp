@@ -5,6 +5,7 @@ Cell_2* findTheNode(Cell_2** arr, int y, int x) {
     //if the coord is out of the board
     if (y < 0 || y > 4 || x < 0 || x > 7) return NULL;
 
+    //find the node 
     Cell_2* temp = arr[y];
     while (temp != NULL) {
         if (temp->j == x) {
@@ -12,12 +13,15 @@ Cell_2* findTheNode(Cell_2** arr, int y, int x) {
         }
         temp = temp->next;
     }
+    //if cannot find, return null
     return NULL;
 }
 
+//check 2 chosen boxes are connected in a I shape
 bool Icheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
     int ma, mi, i = 0;
     Cell_2* temp, * tempHead;
+    //vertical
     if (x1 == x2) {
         ma = max(y1, y2);
         mi = min(y1, y2);
@@ -61,6 +65,7 @@ bool Icheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
             }
         }
     }
+    //horizontal
     if (y1 == y2) {
         i = 0;
         ma = max(x1, x2);
@@ -98,8 +103,10 @@ bool Icheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
     return false;
 }
 
+//check 2 chosen boxes are connected in a L shape
 bool Lcheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
     Cell_2* temp;
+    //check the top corner (x2, y1)
     temp = findTheNode(arr, y1, x2);
     if (temp == NULL) {
         int x = x2, y = y1;
@@ -133,7 +140,7 @@ bool Lcheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
             }
         }
     }
-
+    //check the bottom corner (x1, y2)
     temp = findTheNode(arr, y2, x1);
     if (temp == NULL) {
         int x = x1, y = y2;
@@ -171,7 +178,7 @@ bool Lcheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
     return false;
 }
 
-
+//check 2 chosen boxes are connected in a U or Z shape
 bool UandZcheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
     if ((findTheNode(arr, y1 - 1, x1) == NULL && findTheNode(arr, y2 - 1, x2) == NULL || findTheNode(arr, y1 + 1, x1) == NULL && findTheNode(arr, y2 + 1, x2) == NULL) && (y1 == y2)) {
         return true;
@@ -277,6 +284,7 @@ bool UandZcheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
     return false;
 }
 
+//check all the posible cases
 bool allCheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
     if (Icheck(arr, y1, x1, y2, x2)) return true;
     else if (Lcheck(arr, y1, x1, y2, x2)) return true;
@@ -348,6 +356,7 @@ void DifMode(Cell_2** arr, int y1, int x1, int y2, int x2, char bg[][51]) {
     }
 }
 
+//check if there are any vaid pairs left
 bool checkValidPairs(Cell_2** arr) {
     Cell_2* Head, * temp;
     for (int i = 0; i < 5; i++) {

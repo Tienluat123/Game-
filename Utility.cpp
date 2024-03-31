@@ -31,19 +31,30 @@ void printLeaderBoard(char &c) {
     system("cls");
 
     //print title of the leaderboard
-    goToXY(60, 5);
+    goToXY(30, 5);
+    for (int i = 0; i < 75; i++) {
+        cout << "_";
+    }
+    goToXY(63, 4);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
     cout << "LEADERBOARD";
+    goToXY(29, 6);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+    cout << "|";
     goToXY(30, 6);
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 5);
+    cout << "RANK";
+    goToXY(45, 6);
     cout << "NAME";
     goToXY(100, 6);
     cout << "POINT";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+    cout << "|";
     goToXY(30, 7);
     for (int i = 0; i < 75; i++) {
-        cout << "=";
+        cout << "_";
     }
+    cout << "|";
 
     //open file to read
     ifstream f;
@@ -52,25 +63,47 @@ void printLeaderBoard(char &c) {
         Player p;
 
         //read and print the information of the players of the file
-        int i = 0;
+        int i = 0, rank = 1;
         while (getline(f, p.name, ' ')) {
             f >> p.point;
             f.get();
+
+            goToXY(29, 7 + i);
+            cout << "|";
             goToXY(30, 7 + i);
             for (int j = 0; j < 75; j++) {
-                cout << "=";
+                cout << "_";
             }
+            cout << "|";
+
             //change the text color for 3 highest player
-            if (i <= 4) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4 - i / 2);
+            goToXY(29, 8 + i);
+            cout << "|";
             goToXY(30, 8 + i);
+            if (i <= 4) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4 - i / 2);
+            cout << rank++;
+            if (i <= 4) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4 - i / 2);
+            goToXY(45, 8 + i);
             cout << p.name;
             goToXY(100, 8 + i);
             cout << p.point;
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+            goToXY(105, 8 + i);
+            cout << "|";
             if (i <= 4) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
             i += 2;
         }
+        goToXY(29, 7 + i);
+        cout << "|";
+        goToXY(30, 7 + i);
+        for (int i = 0; i < 75; i++) {
+            cout << "_";
+        }
+        goToXY(105, 7 + i);
+        cout << "|";
         f.close();
     }
+  
     //wait until another key is pressed to clear screen
     _getch();
     system("cls");
@@ -222,7 +255,7 @@ void displayNormalBg(char bg[][41], int x, int y) {
 void getHardBg(char bg[][51]) {
     ifstream fin("hcmus.txt");
     if (fin) {
-        for (int i = 0; i < 26; i++)
+        for (int i = 0; i < 25; i++)
         {
             for (int j = 0; j < 51; j++)
             {

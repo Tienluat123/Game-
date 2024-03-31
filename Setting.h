@@ -3,10 +3,13 @@
 #define CONSOLE
 
 #include <Windows.h>
+#include "Structure.h"
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
+
 void goToXY(int, int);
 void resizeWindow(int, int);
 void setCursor(bool);
 void hideScrollBar();
 void initWindow(int, int);
-
 #endif

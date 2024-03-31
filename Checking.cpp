@@ -1,20 +1,5 @@
 #include "Checking.h"
 
-//check if 2 chosen boxes is next to each other
-bool nextcheck(Cell_1** board, int p1, int p2, int q1, int q2) {
-    //vertical
-    if ((p1 == q1 + 1 || p1 == q1 - 1) && (p2 == q2)) {
-        if (board[p1][p2].c == board[q1][q2].c)
-            return true;
-    }
-    //horizontal
-    if ((p2 == q2 + 1 || p2 == q2 - 1) && (p1 == q1)) {
-        if (board[p1][p2].c == board[q1][q2].c)
-            return true;
-    }
-    return false;
-}
-
 //check if if there is a line (sequence of consecutive valid boxes) between two chosen boxes on a game board.
 bool linecheck(Cell_1** board, int p1, int p2, int q1, int q2) {
     //horizontal
@@ -296,10 +281,7 @@ bool Ucheck(Cell_1** board, int p1, int p2, int q1, int q2) {
 
 //check all the possible cases
 bool allcheck(Cell_1** board, int p1, int p2, int q1, int q2) {
-    if (nextcheck(board, p1, p2, q1, q2)) {
-        return true;
-    }
-    else if (Icheck(board, p1, p2, q1, q2)) {
+    if (Icheck(board, p1, p2, q1, q2)) {
         return true;
     }
     else if (Lcheck(board, p1, p2, q1, q2)) {
@@ -347,5 +329,46 @@ bool checkValidPairs(Cell_1** board) {
         check++;
         delete[] pos;
     }
+    return false;
+}
+
+bool suggestion(Cell_1** board, Position& p1, Position& p2) {
+    const int maxPositions = BOARDHEIGHT * BOARDWIDTH;
+    Position positions[maxPositions];
+    int count = 0;
+
+    // Iterate through each character from 'A' to 'Z'
+    for (char check = 'A'; check <= 'Z'; ++check) {
+        // Find positions of cells with the current character
+        for (int i = 0; i < BOARDHEIGHT; ++i) {
+            for (int j = 0; j < BOARDWIDTH; ++j) {
+                if (board[i][j].c == check && board[i][j].valid) {
+                    positions[count++] = {i, j};
+                }
+                if (count >= maxPositions) // Avoid exceeding array bounds
+                    break;
+            }
+            if (count >= maxPositions) // Avoid exceeding array bounds
+                break;
+        }
+
+        // Iterate through pairs of positions to check for a valid pair
+        for (int i = 0; i < count - 1; ++i) {
+            for (int j = i + 1; j < count; ++j) {
+                // Check if there's a valid path between the pair of positions
+                if (allcheck(board, positions[i].x, positions[i].y, positions[j].x, positions[j].y)) {
+                    // If a valid pair is found, store the coordinates and return true
+                    p1 = positions[i];
+                    p2 = positions[j];
+                    return true;
+                }
+            }
+        }
+
+        // Reset the count for the next character
+        count = 0;
+    }
+
+    //if no valid pair left, return false
     return false;
 }

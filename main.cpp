@@ -2,7 +2,7 @@
 #include "Hard.h"
 
 int main (){
-    initWindow(1000, 500);
+    initWindow(1500, 500);
 
     int status;
     Player p;

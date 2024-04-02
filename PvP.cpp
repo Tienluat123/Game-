@@ -1,113 +1,11 @@
+#include "PvP.h"
 #include "Normal.h"
-#include <iostream>
-using namespace std;
 
-char bg[20][41];
-//Cell_1** prevBoard = NULL;
+//current player turn
+int cur_player = 1;
 
-//initialize the board for the normal mode
-void initBoard(Cell_1** board) {
-    //dynamic allocate the board and asign the coord for each box
-    for (int i = 0; i < BOARDHEIGHT; i++) {
-        board[i] = new Cell_1[BOARDWIDTH];
-        for (int j = 0; j < BOARDWIDTH; j++) {
-            board[i][j].j = j;
-            board[i][j].i = i;
-        }
-    }
 
-    //assign a character for each box in the board
-    int flagNum = (BOARDWIDTH * BOARDHEIGHT) / 2;
-    while (flagNum) { 
-        //the index and the time that character appears
-        int index, time = 2;
-        //random the character
-        char c = 65 + rand() % 26;
-        //assign the character into the board
-        while (time) {
-            //get the random coord 
-            index = rand() % 40;
-            if (board[index / 8][index % 8].c == ' ') {
-                board[index / 8][index % 8].c = c;
-                time--;
-            }
-        }
-        flagNum--;
-    }
-}
-
-//delete the board when the game is over
-void deleteBoard(Cell_1** board) {
-    for (int i = 0; i < BOARDHEIGHT; i++) {
-        for (int j = 0; j < BOARDWIDTH; j++) {
-            //if there are still valid boxes, delete them
-            if (board[i][j].valid) {
-                board[i][j].deleteBox();
-                if (j < 4) displayNormalBg(bg, j, i);
-                Sleep(200);
-            }
-        }
-    }
-
-    //deallocate the board
-    for (int i = 0; i < BOARDHEIGHT; i++) {
-        delete[]board[i];
-    }
-    delete[]board;
-}
-
-//render the board
-void renderBoard(Cell_1** board) {
-    for (int i = 0; i < BOARDHEIGHT; i++) {
-        for (int j = 0; j < BOARDWIDTH; j++) {
-            board[i][j].drawBox(112);
-        }
-    }
-}
-
-//void copyBoard(Cell_1** src, Cell_1**& dest) {
-//    // Assuming BOARDHEIGHT and BOARDWIDTH are defined constants
-//    if (!dest) {
-//        dest = new Cell_1 * [BOARDHEIGHT];
-//        for (int i = 0; i < BOARDHEIGHT; ++i) {
-//            dest[i] = new Cell_1[BOARDWIDTH];
-//            for (int j = 0; j < BOARDWIDTH; ++j) {
-//                dest[i][j] = src[i][j];
-//            }
-//        }
-//    }
-//    else {
-//        for (int i = 0; i < BOARDHEIGHT; ++i) {
-//            for (int j = 0; j < BOARDWIDTH; ++j) {
-//                dest[i][j] = src[i][j];
-//            }
-//        }
-//    }
-//}
-//
-//// Function to undo the last move
-//void undo(Cell_1**& board, Cell_1** prevBoard) {
-//    if (prevBoard) {
-//        // Restore the game board to its previous state
-//        copyBoard(prevBoard, board);
-//        // Clear the previous board state
-//        clearBoard(prevBoard);
-//    }
-//}
-//
-//// Function to clear the previous board state
-//void clearBoard(Cell_1**& board) {
-//    if (board) {
-//        for (int i = 0; i < BOARDHEIGHT; ++i) {
-//            delete[] board[i];
-//        }
-//        delete[] board;
-//        board = nullptr;
-//    }
-//}
-
-//movement
-void move(Cell_1** board, Position& pos, int& status, Player& p, Position selectedPos[], int& couple) {
+void movePvP(Cell_1** board, Position& pos, int& status, Player& p, Position selectedPos[], int& couple, int& cur_player) {
     int temp, key;
     temp = _getch();
     //if the pressed key is not special key (arrow key)
@@ -128,9 +26,18 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
                 couple = 2;
                 selectedPos[0] = { -1, -1 };
                 p.life--;
-                PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                goToXY(70, 0);
-                cout << "Life: " << p.life;
+                if (cur_player == 1) {
+                    cur_player++;
+                    PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+                    goToXY(30, 2);
+                    cout << "Life: " << p.life;
+                }
+                else if (cur_player == 2) {
+                    cur_player = 1;
+                    PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+                    goToXY(70, 2);
+                    cout << "Life: " << p.life;
+                }
             } 
             //check the repetition
             else {
@@ -146,8 +53,16 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
                         //if the shape is correct
                         if (allcheck(board, selectedPos[0].y, selectedPos[0].x, selectedPos[1].y, selectedPos[1].x)) {
                             p.point += 20;
-                            goToXY(40, 0);
-                            cout << "Point: " << p.point;
+                            if (cur_player == 1) {
+                                cur_player++;
+                                goToXY(10, 1);
+                                cout << "Point: " << p.point;
+                            }
+                            else if (cur_player == 2) {
+                                cur_player = 1;
+                                goToXY(70, 1);
+                                cout << "Point: " << p.point;
+                            }
 
                             board[selectedPos[0].y][selectedPos[0].x].drawBox(40);
                             board[selectedPos[1].y][selectedPos[1].x].drawBox(40);
@@ -155,11 +70,9 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
 
                             board[selectedPos[0].y][selectedPos[0].x].valid = 0;
                             board[selectedPos[0].y][selectedPos[0].x].deleteBox();
-                            if (selectedPos[0].x < 4) displayNormalBg(bg, selectedPos[0].x, selectedPos[0].y);
 
                             board[selectedPos[1].y][selectedPos[1].x].valid = 0;
                             board[selectedPos[1].y][selectedPos[1].x].deleteBox();
-                            if (selectedPos[1].x < 4) displayNormalBg(bg, selectedPos[1].x, selectedPos[1].y);
                         }
                         else {
                             board[selectedPos[0].y][selectedPos[0].x].drawBox(70);
@@ -167,6 +80,18 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
                             Sleep(500);
 
                             p.life--;
+                            if (cur_player == 1) {
+                                cur_player++;
+                                goToXY(10, 2);
+                                PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+                                cout << "Life: " << p.life;
+                            }
+                            else if (cur_player == 2) {
+                                cur_player = 1;
+                                goToXY(70, 2);
+                                PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+                                cout << "Life: " << p.life;
+                            }
                             goToXY(70, 0);
                             PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                             cout << "Life: " << p.life;
@@ -178,9 +103,19 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
                         Sleep(500);
 
                         p.life--;
-                        PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                        goToXY(70, 0);
-                        cout << "Life: " << p.life;
+                        if (cur_player == 1) {
+                            cur_player++;
+                            PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+                            goToXY(10, 2);
+                            cout << "Life: " << p.life;
+                        }
+                        else if (cur_player == 2) {
+                            cur_player = 1;
+                            PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+                            goToXY(70, 2);
+                            cout << "Life: " << p.life;
+                        }
+                        
                     }
                     // return to normal
                     board[selectedPos[0].y][selectedPos[0].x].selected = 0;
@@ -188,6 +123,7 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
                     couple = 2;
                     selectedPos[0] = { -1, -1 };
                     selectedPos[1] = { -1, -1 };
+                    
 
                     for (int i = pos.y; i < BOARDHEIGHT; i++) {
                         for (int j = pos.x; j < BOARDWIDTH; j++) {
@@ -396,11 +332,9 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
     }
 }
 
-//the board of the normal mode
-void normalMode(Player& p) {
+void pvpMode (Player& p1, Player& p2){
     //get the background of normal mode
     srand(time(0));
-    getNormalBg(bg);
 
     //initialize the board
     Cell_1** board = new Cell_1 * [BOARDHEIGHT];
@@ -408,11 +342,18 @@ void normalMode(Player& p) {
 
     //print the name, point and life on the screen
     goToXY(10, 0);
-    cout << "Name: " << p.name;
-    goToXY(40, 0);
-    cout << "Point: " << p.point;
+    cout << "Name: " << p1.name;
+    goToXY(10, 1);
+    cout << "Point: " << p1.point;
+    goToXY(10, 2);
+    cout << "Life: " << p1.life;
+
     goToXY(70, 0);
-    cout << "Life: " << p.life;
+    cout << "Name: " << p2.name;
+    goToXY(70, 1);
+    cout << "Point: " << p2.point;
+    goToXY(70, 2);
+    cout << "Life: " << p2.life;
 
     //print the introduction on the screen
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
@@ -421,6 +362,8 @@ void normalMode(Player& p) {
     goToXY(95, 13);
     cout << "Press Enter to choose";
     goToXY(95, 14);
+    cout << "Press SPACE to suggest";
+    goToXY(95, 15);
     cout << "Press ESC to quit";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
@@ -435,12 +378,24 @@ void normalMode(Player& p) {
                     //2. players choose to exit
 
     //while status is 0 and life is not 0 
-    while (status == 0 && p.life != 0) {
+    while (status == 0 && p1.life != 0 && p2.life != 0) {
         board[curPosition.y][curPosition.x].selected = 1;
 
         renderBoard(board);
 
-        move(board, curPosition, status, p, selectedPos, couple);
+        if (cur_player == 1) {
+            goToXY(50, 3);
+            cout << "It's " << p1.name << "turn";
+        }
+        else {
+            goToXY(55, 3);
+            cout << p2.name;
+        }
+
+        movePvP(board, curPosition, status, p1, selectedPos, couple, cur_player);
+        if (cur_player == 2){
+            movePvP(board, curPosition, status, p2, selectedPos, couple, cur_player);
+        }
 
         //if there are no valid pairs left, the game is over
         if ((!checkValidPairs(board))) status = 1;
@@ -453,35 +408,38 @@ void normalMode(Player& p) {
 
     //if players choose ESC
     if (status == 2){
-        //update the leaderboard
-        writeLeaderBoard(p, "Normal.txt");
         Sleep(500);
     }  
-    //if the life is 0 or the status is 1 and max point of a board is not 400
-    else if (p.life == 0 || (status == 1 && p.point % 400 != 0)) {
-        //display lose status and update the leaderboard
-        displayStatus(0);
-        writeLeaderBoard(p, "Normal.txt");
-        Sleep(500);
-    }
-    ///if the life is not 0 when finishing the board
-    else if (p.life != 0) {
-        //display win status
+    else if (p1.life == 0 || p2.life == 0 || (status == 1)) {
+        if (p1.life == 0 && p2.life != 0){
+            goToXY(53, 17);
+            cout << "Player " << p2.name << " win";
+        } else if (p2.life == 0 && p1.life != 0){
+            goToXY(53, 17);
+            cout << "Player " << p1.name << " win";
+        } else if (p1.life != 0 && p2.life != 0){
+            if (p1.point > p2.point){
+                goToXY(53, 17);
+                cout << "Player " << p1.name << " win";
+            } else if (p1.point < p2.point){
+                goToXY(53, 17);
+                cout << "Player " << p2.name << " win";
+            } else {
+                goToXY(57, 17);
+                cout << "DRAW";
+            }
+        }
         displayStatus(1);
-        goToXY(53, 17);
-        cout << "You get a bonus life";
-        p.life++;
+        Sleep(500);
 
-        goToXY(50, 18);
-        //ask the players whether they want continue or not 
+        //ask the players whether they want continue or not
+        goToXY(50, 18); 
         char c;
         cout << "Do you want to continue next game? (Y/N): ";
         cin >> c;
         cin.ignore();
         system("cls");
-        if (c == 'y' || c == 'Y') normalMode(p);
-        //if they choose not, update the leaderboard
-        else writeLeaderBoard(p, "Normal.txt");
+        if (c == 'y' || c == 'Y') pvpMode(p1, p2);
     }
 
     system("cls");

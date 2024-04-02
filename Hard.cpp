@@ -384,8 +384,6 @@ void hardMode(Player& p) {
     goToXY(95, 13);
     cout << "Press Enter to choose";
     goToXY(95, 14);
-    cout << "Press SPACE to suggest";
-    goToXY(95, 15);
     cout << "Press ESC to quit";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
@@ -425,7 +423,11 @@ void hardMode(Player& p) {
     else if (p.life != 0) {
         //display win status
         displayStatus(1);
-        goToXY(50, 17);
+        goToXY(53, 17);
+        cout << "You get a bonus life";
+        p.point++;
+
+        goToXY(50, 18);
         //ask the players whether they want continue or not 
         char c;
         cout << "Do you want to continue next game? (Y/N): ";

@@ -412,18 +412,18 @@ void hardMode(Player& p) {
         writeLeaderBoard(p, "Hard.txt");
         Sleep(500);
     }
-    //if the life is 0 or the status is 1 and the max point of a board is not 400
-    else if (p.life == 0 || (status == 1 && p.point % 400 != 0)) {
+    //if the life is 0 
+    else if (p.life == 0) {
         //display lose status and update the leaderboard
         displayStatus(0);
         writeLeaderBoard(p, "Hard.txt");
         Sleep(500);
     }
     ///if the life is not 0 when finishing the board
-    else if (p.life != 0) {
+    else if (p.life != 0 && p.point >= 0) {
         //display win status
         displayStatus(1);
-        goToXY(53, 17);
+        goToXY(55, 17);
         cout << "You get a bonus life";
         p.point++;
 
@@ -437,6 +437,12 @@ void hardMode(Player& p) {
         if (c == 'y' || c == 'Y') hardMode(p);
         //if they choose not, update the leaderboard
         else writeLeaderBoard(p, "Hard.txt");
+    }
+    //if the game is over but the board is still not completed
+    else if (status == 1) {
+        displayStatus(0);
+        writeLeaderBoard(p, "Hard.txt");
+        Sleep(500);
     }
     system("cls");
 }

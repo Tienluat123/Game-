@@ -332,44 +332,34 @@ bool checkValidPairs(Cell_1** board) {
     return false;
 }
 
-//bool suggestion(Cell_1** board, Position& p1, Position& p2) {
-//    const int maxPositions = BOARDHEIGHT * BOARDWIDTH;
-//    Position positions[maxPositions];
-//    int count = 0;
-//
-//    // Iterate through each character from 'A' to 'Z'
-//    for (char check = 'A'; check <= 'Z'; ++check) {
-//        // Find positions of cells with the current character
-//        for (int i = 0; i < BOARDHEIGHT; ++i) {
-//            for (int j = 0; j < BOARDWIDTH; ++j) {
-//                if (board[i][j].c == check && board[i][j].valid) {
-//                    positions[count++] = {i, j};
-//                }
-//                if (count >= maxPositions) // Avoid exceeding array bounds
-//                    break;
-//            }
-//            if (count >= maxPositions) // Avoid exceeding array bounds
-//                break;
-//        }
-//
-//        // Iterate through pairs of positions to check for a valid pair
-//        for (int i = 0; i < count - 1; ++i) {
-//            for (int j = i + 1; j < count; ++j) {
-//                // Check if there's a valid path between the pair of positions
-//                if (allcheck(board, positions[i].x, positions[i].y, positions[j].x, positions[j].y)) {
-//                    // If a valid pair is found, store the coordinates and return true
-//                    p1 = positions[i];
-//                    p2 = positions[j];
-//                    return true;
-//                }
-//            }
-//        }
-//
-//        // Reset the count for the next character
-//        count = 0;
-//    }
-//
-//    //if no valid pair left, return false
-//    return false;
-//}
+bool suggestion(Cell_1** board, Position& p1, Position& p2) {
+    for (int i = 0; i < BOARDHEIGHT; i++){
+        for (int j = 0; j < BOARDWIDTH; j++){
+            p1 = { j, i };
+
+            if (!board[i][j].valid){
+                continue;
+            }
+
+            for (int k = 0; k < BOARDHEIGHT; k++){
+                for (int l = 0; l < BOARDWIDTH; l++){
+                    p2 = { l, k };
+
+                    if ( (k == i && l == j) || !board[k][l].valid){
+                        continue;
+                    }
+
+                    if (board[i][j].c == board[k][l].c){
+                        if (allcheck(board, i, j, k, l)){
+                            p1 = { j, i };
+						    p2 = { l, k };
+						    return 1;
+                        }
+                    }
+                }
+            }
+        } 
+    }
+    return 0;
+}
 

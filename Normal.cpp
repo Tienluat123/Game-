@@ -155,11 +155,11 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
 
                             board[selectedPos[0].y][selectedPos[0].x].valid = 0;
                             board[selectedPos[0].y][selectedPos[0].x].deleteBox();
-                            if (selectedPos[0].x < 4) displayNormalBg(bg, selectedPos[0].x, selectedPos[0].y);
+                            displayNormalBg(bg, selectedPos[0].x, selectedPos[0].y);
 
                             board[selectedPos[1].y][selectedPos[1].x].valid = 0;
                             board[selectedPos[1].y][selectedPos[1].x].deleteBox();
-                            if (selectedPos[1].x < 4) displayNormalBg(bg, selectedPos[1].x, selectedPos[1].y);
+                            displayNormalBg(bg, selectedPos[1].x, selectedPos[1].y);
                         }
                         else {
                             board[selectedPos[0].y][selectedPos[0].x].drawBox(70);
@@ -213,6 +213,28 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
             }
         }
         else if (temp == SPACE_KEY) {
+            if (suggestion(board, selectedPos[0], selectedPos[1])){
+                p.point -= 10;
+                goToXY(40, 0);
+                cout << "Point: " << p.point;
+
+                board[selectedPos[0].y][selectedPos[0].x].drawBox(40);
+                board[selectedPos[1].y][selectedPos[1].x].drawBox(40);
+                Sleep(1000);
+
+                board[selectedPos[0].y][selectedPos[0].x].valid = 0;
+                board[selectedPos[0].y][selectedPos[0].x].deleteBox();
+                displayNormalBg(bg, selectedPos[0].x, selectedPos[0].y);
+
+                board[selectedPos[1].y][selectedPos[1].x].valid = 0;
+                board[selectedPos[1].y][selectedPos[1].x].deleteBox();
+                displayNormalBg(bg, selectedPos[1].x, selectedPos[1].y);
+            }
+
+            couple = 2;
+            selectedPos[0] = { -1, -1 };
+            selectedPos[1] = { -1, -1 };
+
             return;
         }
     }
@@ -421,6 +443,8 @@ void normalMode(Player& p) {
     goToXY(95, 13);
     cout << "Press Enter to choose";
     goToXY(95, 14);
+    cout << "Press SPACE to suggest (-10pt)";
+    goToXY(95, 15);
     cout << "Press ESC to quit";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
@@ -443,7 +467,7 @@ void normalMode(Player& p) {
         move(board, curPosition, status, p, selectedPos, couple);
 
         //if there are no valid pairs left, the game is over
-        if ((!checkValidPairs(board))) status = 1;
+        if ((!checkValidPairs(board)) || p.point < 0) status = 1;
     }
 
     renderBoard(board);
@@ -457,21 +481,17 @@ void normalMode(Player& p) {
         writeLeaderBoard(p, "Normal.txt");
         Sleep(500);
     }  
-    //if the life is 0 or the status is 1 and max point of a board is not 400
-    else if (p.life == 0 || (status == 1 && p.point % 400 != 0)) {
+    //if the life is 0
+    else if (p.life == 0) {
         //display lose status and update the leaderboard
         displayStatus(0);
         writeLeaderBoard(p, "Normal.txt");
         Sleep(500);
     }
-    ///if the life is not 0 when finishing the board
-    else if (p.life != 0) {
+    ///if the life is not 0 and point is not negative when finishing the board
+    else if (p.life != 0 && p.point >= 0) {
         //display win status
         displayStatus(1);
-        goToXY(53, 17);
-        cout << "You get a bonus life";
-        p.life++;
-
         goToXY(50, 18);
         //ask the players whether they want continue or not 
         char c;
@@ -482,6 +502,12 @@ void normalMode(Player& p) {
         if (c == 'y' || c == 'Y') normalMode(p);
         //if they choose not, update the leaderboard
         else writeLeaderBoard(p, "Normal.txt");
+    }
+    //if the game is over but the board is still not completed
+    else if (status == 1) {
+        displayStatus(0);
+        writeLeaderBoard(p, "Normal.txt");
+        Sleep(500);
     }
 
     system("cls");

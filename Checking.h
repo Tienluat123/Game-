@@ -10,5 +10,5 @@ bool Zcheck(Cell_1**, int , int , int , int );
 bool Ucheck(Cell_1**, int , int , int , int );
 bool allcheck(Cell_1**, int , int , int , int );
 bool checkValidPairs(Cell_1**);
-//bool suggestion(Cell_1**, Position&, Position&);
+bool suggestion(Cell_1**, Position&, Position&);
 #endif

@@ -379,12 +379,55 @@ void hardMode(Player& p) {
     cout << "Life: " << p.life;
 
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
+
+    /*goToXY(96, 11);
+    for (int i = 0; i < 23; i++)
+        cout << "-";
     goToXY(95, 12);
-    cout << "Press arrow key to move";
+    cout << "|Press arrow key to move";
     goToXY(95, 13);
-    cout << "Press Enter to choose";
+    cout << "|Press Enter to choose";
     goToXY(95, 14);
-    cout << "Press ESC to quit";
+    cout << "|Press SPACE to suggest";
+    goToXY(95, 15);
+    cout << "|Correct match (+20pt)";
+    goToXY(95, 16);
+    cout << "|Wrong match (-1 life)";
+    goToXY(95, 17);
+    cout << "|Use suggestion (+10pt)";
+    goToXY(95, 18);
+    cout << "|Press ESC to quit";
+    goToXY(96, 19);
+    for (int i = 0; i < 23; i++)
+        cout << "-";
+    for (int i = 0; i < 7; i++) {
+        goToXY(95 + 24, 12 + i);
+        cout << "|";
+    }*/
+
+
+    goToXY(96, 11);
+    for (int i = 0; i < 23; i++)
+        cout << "-";
+    goToXY(95, 12);
+    cout << "|Press arrow key to move";
+    goToXY(95, 13);
+    cout << "|Press Enter to choose";
+    goToXY(95, 14);
+    cout << "|Press ESC to quit";
+    goToXY(95, 15);
+    cout << "|Correct match (+20pt)";
+    goToXY(95, 16);
+    cout << "|Wrong match (-1 life)";
+    goToXY(95, 17);
+    cout << "|NO SUGGESTION";
+    goToXY(96, 18);
+    for (int i = 0; i < 23; i++)
+        cout << "-";
+    for (int i = 0; i < 6; i++) {
+        goToXY(95 + 24, 12 + i);
+        cout << "|";
+    }
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
     Position selectedPos[] = { {-1, -1}, {-1, -1} };
@@ -412,20 +455,13 @@ void hardMode(Player& p) {
         writeLeaderBoard(p, "Hard.txt");
         Sleep(500);
     }
-    //if the life is 0 
-    else if (p.life == 0) {
-        //display lose status and update the leaderboard
-        displayStatus(0);
-        writeLeaderBoard(p, "Hard.txt");
-        Sleep(500);
-    }
     ///if the life is not 0 when finishing the board
-    else if (p.life != 0 && p.point >= 0) {
+    else if (p.life != 0 && status == 1) {
         //display win status
         displayStatus(1);
-        goToXY(55, 17);
+        goToXY(57, 17);
         cout << "You get a bonus life";
-        p.point++;
+        p.life++;
 
         goToXY(50, 18);
         //ask the players whether they want continue or not 
@@ -438,8 +474,10 @@ void hardMode(Player& p) {
         //if they choose not, update the leaderboard
         else writeLeaderBoard(p, "Hard.txt");
     }
-    //if the game is over but the board is still not completed
-    else if (status == 1) {
+    
+    //if the life is 0  or if the game is over but the board is still not completed
+    else if (p.life == 0 || status == 1) {
+        //display lose status and update the leaderboard
         displayStatus(0);
         writeLeaderBoard(p, "Hard.txt");
         Sleep(500);

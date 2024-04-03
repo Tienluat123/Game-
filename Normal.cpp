@@ -107,7 +107,7 @@ void renderBoard(Cell_1** board) {
 //}
 
 //movement
-void move(Cell_1** board, Position& pos, int& status, Player& p, Position selectedPos[], int& couple) {
+void move(Cell_1** board, Position& pos, int& status, Player& p, Position selectedPos[], int& couple, int &suggest) {
     int temp, key;
     temp = _getch();
     //if the pressed key is not special key (arrow key)
@@ -213,29 +213,33 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
             }
         }
         else if (temp == SPACE_KEY) {
-            if (suggestion(board, selectedPos[0], selectedPos[1])){
-                p.point -= 10;
-                goToXY(40, 0);
-                cout << "Point: " << p.point;
+            if (suggest > 0) {
+                if (suggestion(board, selectedPos[0], selectedPos[1])) {
+                    p.point += 10;
+                    suggest--;
+                    goToXY(40, 0);
+                    cout << "Point: " << p.point;
+                    goToXY(100, 0);
+                    cout << "Suggestion: " << suggest;
 
-                board[selectedPos[0].y][selectedPos[0].x].drawBox(40);
-                board[selectedPos[1].y][selectedPos[1].x].drawBox(40);
-                Sleep(1000);
+                    board[selectedPos[0].y][selectedPos[0].x].valid = 0;
+                    board[selectedPos[0].y][selectedPos[0].x].deleteBox();
+                    displayNormalBg(bg, selectedPos[0].x, selectedPos[0].y);
 
-                board[selectedPos[0].y][selectedPos[0].x].valid = 0;
-                board[selectedPos[0].y][selectedPos[0].x].deleteBox();
-                displayNormalBg(bg, selectedPos[0].x, selectedPos[0].y);
+                    board[selectedPos[1].y][selectedPos[1].x].valid = 0;
+                    board[selectedPos[1].y][selectedPos[1].x].deleteBox();
+                    displayNormalBg(bg, selectedPos[1].x, selectedPos[1].y);
+                }
 
-                board[selectedPos[1].y][selectedPos[1].x].valid = 0;
-                board[selectedPos[1].y][selectedPos[1].x].deleteBox();
-                displayNormalBg(bg, selectedPos[1].x, selectedPos[1].y);
+                couple = 2;
+                selectedPos[0] = { -1, -1 };
+                selectedPos[1] = { -1, -1 };
+
+                return;
             }
-
-            couple = 2;
-            selectedPos[0] = { -1, -1 };
-            selectedPos[1] = { -1, -1 };
-
-            return;
+            else {
+                return;
+            }
         }
     }
     else //if pressed keys are arrow keys
@@ -427,6 +431,8 @@ void normalMode(Player& p) {
     //initialize the board
     Cell_1** board = new Cell_1 * [BOARDHEIGHT];
     initBoard(board);
+    //suggestion 
+    int suggest = 3;
 
     //print the name, point and life on the screen
     goToXY(10, 0);
@@ -435,17 +441,35 @@ void normalMode(Player& p) {
     cout << "Point: " << p.point;
     goToXY(70, 0);
     cout << "Life: " << p.life;
+    goToXY(90, 0);
+    cout << "Suggestion: " << suggest;
 
     //print the introduction on the screen
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
+    goToXY(96, 11);
+    for (int i = 0; i < 23; i++)
+        cout << "-";
     goToXY(95, 12);
-    cout << "Press arrow key to move";
+    cout << "|Press arrow key to move";
     goToXY(95, 13);
-    cout << "Press Enter to choose";
+    cout << "|Press Enter to choose";
     goToXY(95, 14);
-    cout << "Press SPACE to suggest (-10pt)";
+    cout << "|Press SPACE to suggest";
     goToXY(95, 15);
-    cout << "Press ESC to quit";
+    cout << "|Correct match (+20pt)";
+    goToXY(95, 16);
+    cout << "|Wrong match (-1 life)";
+    goToXY(95, 17);
+    cout << "|Use suggestion (+10pt)";
+    goToXY(95, 18);
+    cout << "|Press ESC to quit";
+    goToXY(96, 19);
+    for (int i = 0; i < 23; i++)
+        cout << "-";
+    for (int i = 0; i < 7; i++){
+        goToXY(95 + 24, 12 + i);
+        cout << "|";
+    }
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
     //the coord of 2 boxes that player have chosen
@@ -464,7 +488,7 @@ void normalMode(Player& p) {
 
         renderBoard(board);
 
-        move(board, curPosition, status, p, selectedPos, couple);
+        move(board, curPosition, status, p, selectedPos, couple, suggest);
 
         //if there are no valid pairs left, the game is over
         if ((!checkValidPairs(board)) || p.point < 0) status = 1;
@@ -481,17 +505,14 @@ void normalMode(Player& p) {
         writeLeaderBoard(p, "Normal.txt");
         Sleep(500);
     }  
-    //if the life is 0
-    else if (p.life == 0) {
-        //display lose status and update the leaderboard
-        displayStatus(0);
-        writeLeaderBoard(p, "Normal.txt");
-        Sleep(500);
-    }
     ///if the life is not 0 and point is not negative when finishing the board
-    else if (p.life != 0 && p.point >= 0) {
+    else if (p.life != 0 && status == 1) {
         //display win status
         displayStatus(1);
+        goToXY(56, 17);
+        cout << "You get a bonus life";
+        p.life++;
+
         goToXY(50, 18);
         //ask the players whether they want continue or not 
         char c;
@@ -503,8 +524,9 @@ void normalMode(Player& p) {
         //if they choose not, update the leaderboard
         else writeLeaderBoard(p, "Normal.txt");
     }
-    //if the game is over but the board is still not completed
-    else if (status == 1) {
+    //if the life is 0 or the board is still not completed
+    else if (p.life == 0 || status == 1) {
+        //display lose status and update the leaderboard
         displayStatus(0);
         writeLeaderBoard(p, "Normal.txt");
         Sleep(500);

@@ -65,47 +65,6 @@ void renderBoard(Cell_1** board) {
     }
 }
 
-//void copyBoard(Cell_1** src, Cell_1**& dest) {
-//    // Assuming BOARDHEIGHT and BOARDWIDTH are defined constants
-//    if (!dest) {
-//        dest = new Cell_1 * [BOARDHEIGHT];
-//        for (int i = 0; i < BOARDHEIGHT; ++i) {
-//            dest[i] = new Cell_1[BOARDWIDTH];
-//            for (int j = 0; j < BOARDWIDTH; ++j) {
-//                dest[i][j] = src[i][j];
-//            }
-//        }
-//    }
-//    else {
-//        for (int i = 0; i < BOARDHEIGHT; ++i) {
-//            for (int j = 0; j < BOARDWIDTH; ++j) {
-//                dest[i][j] = src[i][j];
-//            }
-//        }
-//    }
-//}
-//
-//// Function to undo the last move
-//void undo(Cell_1**& board, Cell_1** prevBoard) {
-//    if (prevBoard) {
-//        // Restore the game board to its previous state
-//        copyBoard(prevBoard, board);
-//        // Clear the previous board state
-//        clearBoard(prevBoard);
-//    }
-//}
-//
-//// Function to clear the previous board state
-//void clearBoard(Cell_1**& board) {
-//    if (board) {
-//        for (int i = 0; i < BOARDHEIGHT; ++i) {
-//            delete[] board[i];
-//        }
-//        delete[] board;
-//        board = nullptr;
-//    }
-//}
-
 //movement
 void move(Cell_1** board, Position& pos, int& status, Player& p, Position selectedPos[], int& couple, int &suggest) {
     int temp, key;
@@ -219,7 +178,7 @@ void move(Cell_1** board, Position& pos, int& status, Player& p, Position select
                     suggest--;
                     goToXY(40, 0);
                     cout << "Point: " << p.point;
-                    goToXY(100, 0);
+                    goToXY(90, 0);
                     cout << "Suggestion: " << suggest;
 
                     board[selectedPos[0].y][selectedPos[0].x].valid = 0;
@@ -505,6 +464,13 @@ void normalMode(Player& p) {
         writeLeaderBoard(p, "Normal.txt");
         Sleep(500);
     }  
+    //if the life is 0 or the board is still not completed
+    else if (p.life == 0 || (status == 1 && p.point < 370)) {
+        //display lose status and update the leaderboard
+        displayStatus(0);
+        writeLeaderBoard(p, "Normal.txt");
+        Sleep(500);
+    }
     ///if the life is not 0 and point is not negative when finishing the board
     else if (p.life != 0 && status == 1) {
         //display win status
@@ -523,13 +489,6 @@ void normalMode(Player& p) {
         if (c == 'y' || c == 'Y') normalMode(p);
         //if they choose not, update the leaderboard
         else writeLeaderBoard(p, "Normal.txt");
-    }
-    //if the life is 0 or the board is still not completed
-    else if (p.life == 0 || status == 1) {
-        //display lose status and update the leaderboard
-        displayStatus(0);
-        writeLeaderBoard(p, "Normal.txt");
-        Sleep(500);
     }
 
     system("cls");

@@ -61,7 +61,7 @@ void deleteList(Cell_2** arr) {
             arr[i] = arr[i]->next;
             temp->deleteBox();
             if (temp->j < 4) displayHardBg(BG, temp->j, i);
-            Sleep(500);
+            Sleep(200);
             delete temp;
         }
     }
@@ -380,32 +380,6 @@ void hardMode(Player& p) {
 
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
 
-    /*goToXY(96, 11);
-    for (int i = 0; i < 23; i++)
-        cout << "-";
-    goToXY(95, 12);
-    cout << "|Press arrow key to move";
-    goToXY(95, 13);
-    cout << "|Press Enter to choose";
-    goToXY(95, 14);
-    cout << "|Press SPACE to suggest";
-    goToXY(95, 15);
-    cout << "|Correct match (+20pt)";
-    goToXY(95, 16);
-    cout << "|Wrong match (-1 life)";
-    goToXY(95, 17);
-    cout << "|Use suggestion (+10pt)";
-    goToXY(95, 18);
-    cout << "|Press ESC to quit";
-    goToXY(96, 19);
-    for (int i = 0; i < 23; i++)
-        cout << "-";
-    for (int i = 0; i < 7; i++) {
-        goToXY(95 + 24, 12 + i);
-        cout << "|";
-    }*/
-
-
     goToXY(96, 11);
     for (int i = 0; i < 23; i++)
         cout << "-";
@@ -455,8 +429,15 @@ void hardMode(Player& p) {
         writeLeaderBoard(p, "Hard.txt");
         Sleep(500);
     }
+    //if the life is 0 or the board is still not completed
+    else if (p.life == 0 || (status == 1 && p.point < 400)) {
+        //display lose status and update the leaderboard
+        displayStatus(0);
+        writeLeaderBoard(p, "Hard.txt");
+        Sleep(500);
+    }
     ///if the life is not 0 when finishing the board
-    else if (p.life != 0 && status == 1) {
+    else if (p.life != 0) {
         //display win status
         displayStatus(1);
         goToXY(57, 17);
@@ -473,14 +454,6 @@ void hardMode(Player& p) {
         if (c == 'y' || c == 'Y') hardMode(p);
         //if they choose not, update the leaderboard
         else writeLeaderBoard(p, "Hard.txt");
-    }
-    
-    //if the life is 0  or if the game is over but the board is still not completed
-    else if (p.life == 0 || status == 1) {
-        //display lose status and update the leaderboard
-        displayStatus(0);
-        writeLeaderBoard(p, "Hard.txt");
-        Sleep(500);
     }
     system("cls");
 }

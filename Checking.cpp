@@ -362,4 +362,3 @@ bool suggestion(Cell_1** board, Position& p1, Position& p2) {
     }
     return 0;
 }
-

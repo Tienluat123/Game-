@@ -228,7 +228,7 @@ void displayStatus(bool win) {
 // get the background of the board (normal mode)
 //store the background into a char array
 void getNormalBg(char bg[][41]) {
-    ifstream fin("pika.txt");
+    ifstream fin("../pika.txt");
     if (fin) {
         for (int i = 0; i < 20; i++)
         {

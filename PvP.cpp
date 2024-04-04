@@ -26,13 +26,13 @@ void movePvP(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                 couple = 2;
                 selectedPos[0] = { -1, -1 };
                 p.life--;
-                if (cur_player == 1) {
-                    cur_player++;
+                if (cur_player <= 1) {
+                    cur_player = 2;
                     PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                     goToXY(30, 2);
                     cout << "Life: " << p.life;
                 }
-                else if (cur_player == 2) {
+                else {
                     cur_player = 1;
                     PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                     goToXY(70, 2);
@@ -53,12 +53,12 @@ void movePvP(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                         //if the shape is correct
                         if (allcheck(board, selectedPos[0].y, selectedPos[0].x, selectedPos[1].y, selectedPos[1].x)) {
                             p.point += 20;
-                            if (cur_player == 1) {
-                                cur_player++;
+                            if (cur_player <= 1) {
+                                cur_player = 2;
                                 goToXY(10, 1);
                                 cout << "Point: " << p.point;
                             }
-                            else if (cur_player == 2) {
+                            else {
                                 cur_player = 1;
                                 goToXY(70, 1);
                                 cout << "Point: " << p.point;
@@ -80,13 +80,13 @@ void movePvP(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                             Sleep(500);
 
                             p.life--;
-                            if (cur_player == 1) {
-                                cur_player++;
+                            if (cur_player <= 1) {
+                                cur_player = 2;
                                 goToXY(10, 2);
                                 PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                                 cout << "Life: " << p.life;
                             }
-                            else if (cur_player == 2) {
+                            else {
                                 cur_player = 1;
                                 goToXY(70, 2);
                                 PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -103,13 +103,13 @@ void movePvP(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                         Sleep(500);
 
                         p.life--;
-                        if (cur_player == 1) {
-                            cur_player++;
+                        if (cur_player <= 1) {
+                            cur_player = 2;
                             PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                             goToXY(10, 2);
                             cout << "Life: " << p.life;
                         }
-                        else if (cur_player == 2) {
+                        else {
                             cur_player = 1;
                             PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                             goToXY(70, 2);
@@ -147,9 +147,6 @@ void movePvP(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                     }
                 }
             }
-        }
-        else if (temp == SPACE_KEY) {
-            return;
         }
     }
     else //if pressed keys are arrow keys
@@ -357,14 +354,28 @@ void pvpMode (Player& p1, Player& p2){
 
     //print the introduction on the screen
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
+    goToXY(96, 11);
+    for (int i = 0; i < 23; i++)
+        cout << "-";
     goToXY(95, 12);
-    cout << "Press arrow key to move";
+    cout << "|Press arrow key to move";
     goToXY(95, 13);
-    cout << "Press Enter to choose";
+    cout << "|Press Enter to choose";
     goToXY(95, 14);
-    cout << "Press SPACE to suggest";
+    cout << "|Press ESC to quit";
     goToXY(95, 15);
-    cout << "Press ESC to quit";
+    cout << "|Correct match (+20pt)";
+    goToXY(95, 16);
+    cout << "|Wrong match (-1 life)";
+    goToXY(95, 17);
+    cout << "|NO SUGGESTION";
+    goToXY(96, 18);
+    for (int i = 0; i < 23; i++)
+        cout << "-";
+    for (int i = 0; i < 6; i++) {
+        goToXY(95 + 24, 12 + i);
+        cout << "|";
+    }
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
     //the coord of 2 boxes that player have chosen
@@ -385,7 +396,7 @@ void pvpMode (Player& p1, Player& p2){
 
         if (cur_player == 1) {
             goToXY(50, 3);
-            cout << "It's " << p1.name << "turn";
+            cout << "It's " << p1.name << " turn";
         }
         else {
             goToXY(55, 3);
@@ -395,6 +406,7 @@ void pvpMode (Player& p1, Player& p2){
         movePvP(board, curPosition, status, p1, selectedPos, couple, cur_player);
         if (cur_player == 2){
             movePvP(board, curPosition, status, p2, selectedPos, couple, cur_player);
+
         }
 
         //if there are no valid pairs left, the game is over

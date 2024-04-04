@@ -402,8 +402,9 @@ void pvpMode (Player& p1, Player& p2){
             goToXY(55, 3);
             cout << p2.name;
         }
-
-        movePvP(board, curPosition, status, p1, selectedPos, couple, cur_player);
+        
+        if (cur_player == 1)
+            movePvP(board, curPosition, status, p1, selectedPos, couple, cur_player);
         if (cur_player == 2){
             movePvP(board, curPosition, status, p2, selectedPos, couple, cur_player);
 

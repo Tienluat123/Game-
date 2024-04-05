@@ -388,25 +388,41 @@ void pvpMode (Player& p1, Player& p2){
                     //1. game is over
                     //2. players choose to exit
 
+    goToXY(95, 3);
+    cout << "It's " << p1.name << " turn";
+    goToXY(95, 6);
+    cout << "It's " << p2.name << " turn";
+
     //while status is 0 and life is not 0 
     while (status == 0 && p1.life != 0 && p2.life != 0) {
         board[curPosition.y][curPosition.x].selected = 1;
 
         renderBoard(board);
-
+        
         if (cur_player == 1) {
-            goToXY(50, 3);
+            goToXY(95, 3);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
             cout << "It's " << p1.name << " turn";
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
         }
         else {
-            goToXY(55, 3);
-            cout << p2.name;
+            goToXY(95, 6);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+            cout << "It's " << p2.name << " turn";
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
         }
         
-        if (cur_player == 1)
+        if (cur_player == 1) {
             controlPvP(board, curPosition, status, p1, selectedPos, couple, cur_player);
+            goToXY(95, 3);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+            cout << "It's " << p1.name << " turn";
+        }
         if (cur_player == 2){
             controlPvP(board, curPosition, status, p2, selectedPos, couple, cur_player);
+            goToXY(95, 6);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+            cout << "It's " << p2.name << " turn";
 
         }
 

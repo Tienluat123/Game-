@@ -5,7 +5,7 @@
 int cur_player = 1;
 
 
-void movePvP(Cell_1** board, Position& pos, int& status, Player& p, Position selectedPos[], int& couple, int& cur_player) {
+void controlPvP(Cell_1** board, Position& pos, int& status, Player& p, Position selectedPos[], int& couple, int& cur_player) {
     int temp, key;
     temp = _getch();
     //if the pressed key is not special key (arrow key)
@@ -404,9 +404,9 @@ void pvpMode (Player& p1, Player& p2){
         }
         
         if (cur_player == 1)
-            movePvP(board, curPosition, status, p1, selectedPos, couple, cur_player);
+            controlPvP(board, curPosition, status, p1, selectedPos, couple, cur_player);
         if (cur_player == 2){
-            movePvP(board, curPosition, status, p2, selectedPos, couple, cur_player);
+            controlPvP(board, curPosition, status, p2, selectedPos, couple, cur_player);
 
         }
 

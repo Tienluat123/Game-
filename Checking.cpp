@@ -66,45 +66,45 @@ bool linecheck(Cell_1** board, int p1, int p2, int q1, int q2) {
 //check if 2 chosen boxes are connected in a I shape
 bool Icheck(Cell_1** board, int p1, int p2, int q1, int q2) {
     // horizontal
-    if (p1 == q1) {
-        int y, x, dem = 0;
-        if (p2 > q2) {
-            x = q2;
-            y = p2;
-        }
-        else {
-            x = p2;
-            y = q2;
-        }
-        //check from p2 to q2 if there is any boxes
-        for (int i = x + 1; i < y; i++) {
-            //if there is a box, return false, there is no line
-            if (board[p1][i].valid) {
-                return false;
-            }
-        }
-        return true;
-    }
-    //vertical
-    //similar to horizontal 
-    if (p2 == q2) {
-        int x, y, dem = 0;
-        if (p1 > q1) {
-            x = q1;
-            y = p1;
-        }
-        else {
-            x = p1;
-            y = q1;
-        }
-        for (int i = x + 1; i < y; i++) {
-            if (board[i][p2].valid) {
-                return false;
-            }
-        }
-        return true;
-    }
-    return false;
+     if (p1 == q1) {
+         int y, x, dem = 0;
+         if (p2 > q2) {
+             x = q2;
+             y = p2;
+         }
+         else {
+             x = p2;
+             y = q2;
+         }
+         //check from p2 to q2 if there is any boxes
+         for (int i = x + 1; i < y; i++) {
+             //if there is a box, return false, there is no line
+             if (board[p1][i].valid) {
+                 return false;
+             }
+         }
+         return true;
+     }
+     //vertical
+     //similar to horizontal 
+     if (p2 == q2) {
+         int x, y, dem = 0;
+         if (p1 > q1) {
+             x = q1;
+             y = p1;
+         }
+         else {
+             x = p1;
+             y = q1;
+         }
+         for (int i = x + 1; i < y; i++) {
+             if (board[i][p2].valid) {
+                 return false;
+             }
+         }
+         return true;
+     }
+     return false;
 }
 
 //if the 2 chosen boxes are conneccted int a L shape

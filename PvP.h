@@ -7,5 +7,5 @@
 #include <ctime>
 #include <iostream>
 
-void movePvP(Cell_1**, Position&, int&, Player&, Position[], int&, int& );
+void controlPvP(Cell_1**, Position&, int&, Player&, Position[], int&, int& );
 void pvpMode(Player&, Player&);

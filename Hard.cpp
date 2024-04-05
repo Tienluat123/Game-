@@ -36,7 +36,7 @@ void initList(Cell_2** arr) {
     int flagNum = 20;
     while (flagNum) {
         int i, time = 2;
-        char c = 65 + rand() % 26;
+        char c = 65 + rand() % 10;
         while (time)
         {
             i = rand() % 5;
@@ -79,7 +79,7 @@ void renderList(Cell_2** arr) {
     }
 }
 
-void move(Cell_2** arr, Position& pos, int& status, Player& p, Position selectedPos[], int& couple) {
+void control(Cell_2** arr, Position& pos, int& status, Player& p, Position selectedPos[], int& couple) {
     int temp, key;
     temp = _getch();
     //if the pressed key is not special key (arrow key)
@@ -390,15 +390,19 @@ void hardMode(Player& p) {
     goToXY(95, 14);
     cout << "|Press ESC to quit";
     goToXY(95, 15);
-    cout << "|Correct match (+20pt)";
-    goToXY(95, 16);
-    cout << "|Wrong match (-1 life)";
-    goToXY(95, 17);
-    cout << "|NO SUGGESTION";
-    goToXY(96, 18);
+    cout << "|";
     for (int i = 0; i < 23; i++)
         cout << "-";
-    for (int i = 0; i < 6; i++) {
+    goToXY(95, 16);
+    cout << "|Correct match (+20pt)";
+    goToXY(95, 17);
+    cout << "|Wrong match (-1 life)";
+    goToXY(95, 18);
+    cout << "|NO SUGGESTION";
+    goToXY(96, 19);
+    for (int i = 0; i < 23; i++)
+        cout << "-";
+    for (int i = 0; i < 7; i++) {
         goToXY(95 + 24, 12 + i);
         cout << "|";
     }
@@ -414,7 +418,7 @@ void hardMode(Player& p) {
 
         renderList(board);
 
-        move(board, curPosition, status, p, selectedPos, couple);
+        control(board, curPosition, status, p, selectedPos, couple);
 
         if ((!checkValidPairs(board))) status = 1;
     }

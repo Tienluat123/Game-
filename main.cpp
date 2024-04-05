@@ -3,7 +3,7 @@
 #include "PvP.h"
 
 int main (){
-    initWindow(1500, 500);
+    initWindow(2000, 500);
 
     int status;
     Player p, p1, p2;

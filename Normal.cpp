@@ -22,7 +22,7 @@ void initBoard(Cell_1** board) {
         //the index and the time that character appears
         int index, time = 2;
         //random the character
-        char c = 65 + rand() % 26;
+        char c = 65 + rand() % 10;
         //assign the character into the board
         while (time) {
             //get the random coord 
@@ -65,8 +65,8 @@ void renderBoard(Cell_1** board) {
     }
 }
 
-//movement
-void move(Cell_1** board, Position& pos, int& status, Player& p, Position selectedPos[], int& couple, int &suggest) {
+//control system
+void control(Cell_1** board, Position& pos, int& status, Player& p, Position selectedPos[], int& couple, int &suggest) {
     int temp, key;
     temp = _getch();
     //if the pressed key is not special key (arrow key)
@@ -415,17 +415,25 @@ void normalMode(Player& p) {
     goToXY(95, 14);
     cout << "|Press SPACE to suggest";
     goToXY(95, 15);
-    cout << "|Correct match (+20pt)";
-    goToXY(95, 16);
-    cout << "|Wrong match (-1 life)";
-    goToXY(95, 17);
-    cout << "|Use suggestion (+10pt)";
-    goToXY(95, 18);
     cout << "|Press ESC to quit";
-    goToXY(96, 19);
+    goToXY(95, 16);
+    cout << "|";
     for (int i = 0; i < 23; i++)
         cout << "-";
-    for (int i = 0; i < 7; i++){
+    goToXY(95, 17);
+    cout << "|-Correct match (+20pt)";
+    goToXY(95, 18);
+    cout << "|-Wrong match (-1 life)";
+    goToXY(95, 19);
+    cout << "|-Suggest will delete ";
+    goToXY(95, 20);
+    cout << "|a pair for you ";
+    goToXY(95, 21);
+    cout << "|-Use suggestion (+10pt)";
+    goToXY(96, 22);
+    for (int i = 0; i < 23; i++)
+        cout << "-";
+    for (int i = 0; i < 10; i++){
         goToXY(95 + 24, 12 + i);
         cout << "|";
     }
@@ -447,10 +455,10 @@ void normalMode(Player& p) {
 
         renderBoard(board);
 
-        move(board, curPosition, status, p, selectedPos, couple, suggest);
+        control(board, curPosition, status, p, selectedPos, couple, suggest);
 
         //if there are no valid pairs left, the game is over
-        if ((!checkValidPairs(board)) || p.point < 0) status = 1;
+        if ((!checkValidPairs(board))) status = 1;
     }
 
     renderBoard(board);

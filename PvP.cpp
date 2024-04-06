@@ -441,20 +441,19 @@ void pvpMode (Player& p1, Player& p2){
     }  
     else if (p1.life == 0 || p2.life == 0 || (status == 1)) {
         if (p1.life == 0 && p2.life != 0){
-            goToXY(55, 17);
+            goToXY(57, 17);
             cout << "Player " << p2.name << " win";
         } else if (p2.life == 0 && p1.life != 0){
-            goToXY(55, 17);
+            goToXY(57, 17);
             cout << "Player " << p1.name << " win";
         } else if (p1.life != 0 && p2.life != 0){
             if (p1.point > p2.point){
-                goToXY(55, 17);
+                goToXY(57, 17);
                 cout << "Player " << p1.name << " win";
             } else if (p1.point < p2.point){
-                goToXY(55, 17);
+                goToXY(57, 17);
                 cout << "Player " << p2.name << " win";
             } else {
-                if (p1.life < p2.life)
                 goToXY(60, 17);
                 cout << "DRAW";
             }

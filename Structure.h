@@ -36,6 +36,7 @@ struct Cell_1 {
 	bool valid = 1, selected = 0;
 
 	void drawBox(int);
+	void drawHiddenBox(int);
 	void deleteBox();
 };
 

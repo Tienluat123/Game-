@@ -42,6 +42,27 @@ void Cell_1::drawBox (int color){
     }
 }
 
+void Cell_1::drawHiddenBox (int color){
+    if (!valid)
+        return;
+    
+    int x = j + 1, y = i + 1;
+
+    for (int i = 0; i < 5; i++){
+        goToXY(x * 10, y * 4 + i);
+        cout << box[i];
+    }
+
+    if (selected){
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color + (c % 6 + 1)); // white background
+        for (int i = 1; i < 4; i++) {
+            goToXY(x * 10 + 1, y * 4 + i);
+            cout << "         ";
+        }
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+    }
+}
+
 //delete box 
 void Cell_1::deleteBox() {
     int x = j + 1, y = i + 1;

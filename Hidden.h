@@ -8,5 +8,6 @@
 #include <ctime>
 #include <iostream>
 
-void controlPvP(Cell_1**, Position&, int&, Player&, Position[], int&, int& );
-void pvpMode(Player&, Player&);
+void renderHiddenBoard (Cell_1**);
+void controlHidden(Cell_1**, Position& , int& , Player&, Position[], int& , int &);
+void hiddenMode (Player&);

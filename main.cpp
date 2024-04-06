@@ -1,6 +1,7 @@
 #include "Normal.h"
 #include "Hard.h"
 #include "PvP.h"
+#include "Hidden.h"
 
 int main (){
     initWindow(2000, 500);
@@ -8,7 +9,7 @@ int main (){
     int status;
     Player p, p1, p2;
 
-    while ((status = menu()) != 4){
+    while ((status = menu()) != 5){
         switch (status)
         {
         case 0:
@@ -28,6 +29,11 @@ int main (){
             system("cls");
             getPlayerInfor(p2);
             pvpMode(p1, p2);
+            break;
+        case 4:
+            getPlayerInfor(p);
+            system("cls");
+            hiddenMode(p);
             break;
         default:
             break;

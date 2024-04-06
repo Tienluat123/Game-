@@ -16,14 +16,16 @@ void sortLeaderBoard (Player list[], int n){
 //read the file and print the leaderboard on the console
 void printLeaderBoard(char &c) {
     //choose the mode leaderboard 
-    goToXY(45, 15);
-    cout << "Which mode you want to see? (N/H): ";
+    goToXY(40, 15);
+    cout << "Which mode you want to see? (N/H/I(for hidden)): ";
     cin >> c;
     string filename;
     if (c == 'n' || c == 'N'){
         filename = "Normal.txt";
     } else if (c == 'h' || c == 'H'){
         filename = "Hard.txt";
+    } else if (c == 'i' || c == 'I'){
+        filename = "Hidden.txt";
     } else {
         system("cls");
         return;
@@ -298,7 +300,7 @@ void displayHardBg(char bg[][51], int x, int y) {
 //display the menu of the game on the console
 int menu() {
     //create an array of choice of the menu
-    int choice[5] = { 0,0,0,0,0 }, cur_choice = 0; //cur_choice is the choice of the user
+    int choice[6] = { 0,0,0,0,0,0 }, cur_choice = 0; //cur_choice is the choice of the user
 
     //print the title of the game on the console
     goToXY(35, 2);
@@ -429,7 +431,7 @@ int menu() {
             cout << "PVP";
         }
 
-        //if user's choice is the last choice
+        //if user's choice is the fourth choice
         if (choice[4]) {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 112);
 
@@ -438,9 +440,9 @@ int menu() {
                 cout << "             ";
             }
 
-            goToXY(64, 24);
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 112 + 6);
-            cout << "EXIT";
+            goToXY(63, 24);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 112 + 8);
+            cout << "HIDDEN";
         }
         else {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
@@ -449,7 +451,31 @@ int menu() {
                 cout << "             ";
             }
 
-            goToXY(64, 24);
+            goToXY(63, 24);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 8);
+            cout << "HIDDEN";
+        }
+        //if user's choice is the last choice
+        if (choice[5]) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 112);
+
+            for (int i = 0; i < 3; i++) {
+                goToXY(60, 26 + i);
+                cout << "             ";
+            }
+
+            goToXY(64, 27);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 112 + 6);
+            cout << "EXIT";
+        }
+        else {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+            for (int i = 0; i < 3; i++) {
+                goToXY(60, 26 + i);
+                cout << "             ";
+            }
+
+            goToXY(64, 27);
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
             cout << "EXIT";
         }
@@ -478,11 +504,11 @@ int menu() {
                 case KEY_UP: // if it is arrow UP, move up 1 position
                     choice[cur_choice] = 0;
                     if (cur_choice > 0) cur_choice--; // if current choice is at the first choice and user presses move up, go to the last choice
-                    else cur_choice = 4;
+                    else cur_choice = 5;
                     break;
                 case KEY_DOWN: //if it is arrow DOWN, move down 1 position
                     choice[cur_choice] = 0;
-                    if (cur_choice < 4) cur_choice++; //if current choice is at the last choice and user presses move down, return to the first choice
+                    if (cur_choice < 5) cur_choice++; //if current choice is at the last choice and user presses move down, return to the first choice
                     else cur_choice = 0; 
                 default:
                     break;

@@ -36,7 +36,7 @@ void initList(Cell_2** arr) {
     int flagNum = 20;
     while (flagNum) {
         int i, time = 2;
-        char c = 65 + rand() % 10;
+        char c = 65 + rand() % 8;
         while (time)
         {
             i = rand() % 5;

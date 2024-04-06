@@ -179,8 +179,8 @@ void writeLeaderBoard(Player p, string filename) {
 
 //get the information of the new user
 void getPlayerInfor(Player& p) {
-    goToXY(50, 12);
-    cout << "Enter player name: ";
+    goToXY(35, 12);
+    cout << "Enter player name (under 10 characters please): ";
     cin >> p.name;
     cin.ignore();
     p.life = 3;

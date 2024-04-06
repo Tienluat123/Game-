@@ -22,7 +22,7 @@ void initBoard(Cell_1** board) {
         //the index and the time that character appears
         int index, time = 2;
         //random the character
-        char c = 65 + rand() % 10;
+        char c = 65 + rand() % 8;
         //assign the character into the board
         while (time) {
             //get the random coord 
@@ -79,10 +79,12 @@ void control(Cell_1** board, Position& pos, int& status, Player& p, Position sel
         else if (temp == ENTER_KEY) {
             //play enter sound
             PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\enter.wav"), NULL, SND_FILENAME | SND_ASYNC);
+            //check if 2 chosen pairs is the same or not, if they are the same , lose life point. 
             if (pos.x == selectedPos[0].x && pos.y == selectedPos[0].y) {
                 board[selectedPos[0].y][selectedPos[0].x].drawBox(70);
                 Sleep(500);
 
+                //reset the choice pair
                 board[selectedPos[0].y][selectedPos[0].x].selected = 0;
                 couple = 2;
                 selectedPos[0] = { -1, -1 };
@@ -108,10 +110,12 @@ void control(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                             goToXY(40, 0);
                             cout << "Point: " << p.point;
 
+                            //draw boxes in green color
                             board[selectedPos[0].y][selectedPos[0].x].drawBox(40);
                             board[selectedPos[1].y][selectedPos[1].x].drawBox(40);
                             Sleep(500);
 
+                            //delete the pair
                             board[selectedPos[0].y][selectedPos[0].x].valid = 0;
                             board[selectedPos[0].y][selectedPos[0].x].deleteBox();
                             displayNormalBg(bg, selectedPos[0].x, selectedPos[0].y);
@@ -121,10 +125,12 @@ void control(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                             displayNormalBg(bg, selectedPos[1].x, selectedPos[1].y);
                         }
                         else {
+                            //draw boxes in red color
                             board[selectedPos[0].y][selectedPos[0].x].drawBox(70);
                             board[selectedPos[1].y][selectedPos[1].x].drawBox(70);
                             Sleep(500);
 
+                            //lose life point 
                             p.life--;
                             goToXY(70, 0);
                             PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -132,22 +138,25 @@ void control(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                         }
                     }
                     else {
+                        //draw box in red color
                         board[selectedPos[0].y][selectedPos[0].x].drawBox(70);
                         board[selectedPos[1].y][selectedPos[1].x].drawBox(70);
                         Sleep(500);
 
+                        //lose life point
                         p.life--;
                         PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                         goToXY(70, 0);
                         cout << "Life: " << p.life;
                     }
-                    // return to normal
+                    // reset the choice pair
                     board[selectedPos[0].y][selectedPos[0].x].selected = 0;
                     board[selectedPos[1].y][selectedPos[1].x].selected = 0;
                     couple = 2;
                     selectedPos[0] = { -1, -1 };
                     selectedPos[1] = { -1, -1 };
 
+                    //move to the valid box
                     for (int i = pos.y; i < BOARDHEIGHT; i++) {
                         for (int j = pos.x; j < BOARDWIDTH; j++) {
                             if (board[i][j].valid) {
@@ -171,8 +180,11 @@ void control(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                 }
             }
         }
+        //if the players press SPACE key
         else if (temp == SPACE_KEY) {
+            ///check if the suggestion moves is not 0
             if (suggest > 0) {
+                //check if the suggestion move find a valid pair
                 if (suggestion(board, selectedPos[0], selectedPos[1])) {
                     p.point += 10;
                     suggest--;
@@ -181,6 +193,7 @@ void control(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                     goToXY(90, 0);
                     cout << "Suggestion: " << suggest;
 
+                    //delete the pair
                     board[selectedPos[0].y][selectedPos[0].x].valid = 0;
                     board[selectedPos[0].y][selectedPos[0].x].deleteBox();
                     displayNormalBg(bg, selectedPos[0].x, selectedPos[0].y);
@@ -189,7 +202,12 @@ void control(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                     board[selectedPos[1].y][selectedPos[1].x].deleteBox();
                     displayNormalBg(bg, selectedPos[1].x, selectedPos[1].y);
                 }
+                else {
+                    //if it cannot find a valid pair, do nothing
+                    return;
+                }
 
+                //reset to normal
                 couple = 2;
                 selectedPos[0] = { -1, -1 };
                 selectedPos[1] = { -1, -1 };
@@ -197,6 +215,7 @@ void control(Cell_1** board, Position& pos, int& status, Player& p, Position sel
                 return;
             }
             else {
+                //if suggestion move is 0, do nothing
                 return;
             }
         }
@@ -206,6 +225,7 @@ void control(Cell_1** board, Position& pos, int& status, Player& p, Position sel
     {
         //play movement sound
         PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\move.wav"), NULL, SND_FILENAME | SND_ASYNC);
+        //choose a box
         if ((pos.y != selectedPos[0].y || pos.x != selectedPos[0].x) && (pos.y != selectedPos[1].y || pos.x != selectedPos[1].x)) // ktra xem o nay co dang duoc chon hay khong
             board[pos.y][pos.x].selected = 0;
         switch (key = _getch())

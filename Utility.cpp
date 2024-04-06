@@ -230,7 +230,7 @@ void displayStatus(bool win) {
 //store the background into a char array
 void getNormalBg(char bg[][41]) {
     ifstream fin;
-    fin.open("../pika.txt");
+    fin.open("pika.txt");
     if (fin) {
         for (int i = 0; i < 20; i++)
         {
@@ -263,7 +263,8 @@ void displayNormalBg(char bg[][41], int x, int y) {
 
 //get the background of the the board (hard mode)
 void getHardBg(char bg[][51]) {
-    ifstream fin("hcmus.txt");
+    ifstream fin;
+    fin.open("hcmus.txt");
     if (fin) {
         for (int i = 0; i < 25; i++)
         {

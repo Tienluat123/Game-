@@ -390,6 +390,9 @@ void hiddenMode (Player &p){
                     //1. game is over
                     //2. players choose to exit
 
+    renderBoard(board);
+    Sleep(1000);
+
     //while status is 0 and life is not 0 
     while (status == 0 && p.life != 0) {
         board[curPosition.y][curPosition.x].selected = 1;

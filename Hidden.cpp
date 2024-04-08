@@ -390,6 +390,7 @@ void hiddenMode (Player &p){
                     //1. game is over
                     //2. players choose to exit
 
+    //show all board for a second
     renderBoard(board);
     Sleep(1000);
 
@@ -434,7 +435,7 @@ void hiddenMode (Player &p){
         cin >> c;
         cin.ignore();
         system("cls");
-        if (c == 'y' || c == 'Y') normalMode(p);
+        if (c == 'y' || c == 'Y') hiddenMode(p);
         //if they choose not, update the leaderboard
         else writeLeaderBoard(p, "Hidden.txt");
     }

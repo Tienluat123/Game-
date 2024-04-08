@@ -38,32 +38,32 @@ bool Icheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
                 return false;
             }
         }
-        while (temp != NULL) {
-            i++;
-            temp = findTheNode(arr, mi + i, x1);
-            while (temp == NULL) {
-                i++;
-                temp = findTheNode(arr, mi + i, x1);
-                if (mi + i > ma) {
-                    return true;
-                }
-            }
-            if (mi + i > ma) {
-                return true;
-            }
-            if (mi + i == ma) {
-                if (temp == NULL) {
-                    return true;
-                }
-                if (temp->c == tempHead->c) {
-                    return true;
-                }
-                return false;
-            }
-            if (temp != NULL) {
-                return false;
-            }
-        }
+         while (temp != NULL) {
+             i++;
+             temp = findTheNode(arr, mi + i, x1);
+             while (temp == NULL) {
+                 i++;
+                 temp = findTheNode(arr, mi + i, x1);
+                 if (mi + i > ma) {
+                     return true;
+                 }
+             }
+             if (mi + i > ma) {
+                 return true;
+             }
+             if (mi + i == ma) {
+                 if (temp == NULL) {
+                     return true;
+                 }
+                 if (temp->c == tempHead->c) {
+                     return true;
+                 }
+                 return false;
+             }
+             if (temp != NULL) {
+                 return false;
+             }
+         }
     }
     //horizontal
     if (y1 == y2) {
@@ -109,33 +109,8 @@ bool Lcheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
     //check the top corner (x2, y1)
     temp = findTheNode(arr, y1, x2);
     if (temp == NULL) {
-        int x = x2, y = y1;
-        while (temp == NULL) {
-            if (x2 > x1) {
-                x--;
-            }
-            else {
-                x++;
-            }
-            temp = findTheNode(arr, y1, x);
-        }
-        temp = NULL;
-        while (temp == NULL) {
-            if (y2 > y1) {
-                y++;
-            }
-            else {
-                y--;
-            }
-            temp = findTheNode(arr, y, x2);
-        }
-        if (Icheck(arr, y1, x1, y1, x)) {
-            if (Icheck(arr, y2, x2, y, x2)) {
-                return true;
-            }
-        }
-        else if (Icheck(arr, y1, x1, y1, x)) {
-            if (Icheck(arr, y2, x2, y, x2)) {
+        if (Icheck(arr, y1, x1, y1, x2)) {
+            if (Icheck(arr, y2, x2, y1, x2)) {
                 return true;
             }
         }
@@ -143,33 +118,8 @@ bool Lcheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
     //check the bottom corner (x1, y2)
     temp = findTheNode(arr, y2, x1);
     if (temp == NULL) {
-        int x = x1, y = y2;
-        while (temp == NULL) {
-            if (x2 > x1) {
-                x++;
-            }
-            else {
-                x--;
-            }
-            temp = findTheNode(arr, y2, x);
-        }
-        temp = NULL;
-        while (temp == NULL) {
-            if (y2 > y1) {
-                y--;
-            }
-            else {
-                y++;
-            }
-            temp = findTheNode(arr, y, x1);
-        }
-        if (Icheck(arr, y1, x1, y1, x)) {
-            if (Icheck(arr, y2, x2, y, x2)) {
-                return true;
-            }
-        }
-        else if (Icheck(arr, y2, x2, y2, x)) {
-            if (Icheck(arr, y1, x1, y, x1)) {
+        if (Icheck(arr, y1, x1, y2, x1)) {
+            if (Icheck(arr, y2, x2, y2, x1)) {
                 return true;
             }
         }
@@ -292,6 +242,7 @@ bool allCheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
     return false;
 }
 
+//delete the box
 void deleteNode(Cell_2** arr, int y, int x, char bg[][51]) {
     Cell_2* p = findTheNode(arr, y, x);
     if (x == 0) {

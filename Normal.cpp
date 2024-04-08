@@ -43,7 +43,7 @@ void deleteBoard(Cell_1** board) {
             //if there are still valid boxes, delete them
             if (board[i][j].valid) {
                 board[i][j].deleteBox();
-                if (j < 4) displayNormalBg(bg, j, i);
+                displayNormalBg(bg, j, i);
                 Sleep(200);
             }
         }
@@ -489,14 +489,14 @@ void normalMode(Player& p) {
     //if players choose ESC
     if (status == 2){
         //update the leaderboard
-        writeLeaderBoard(p, "Normal.txt");
+        writeLeaderBoard(p, "H:\\C C++\\Project_KTLT\\Project_KTLT\\record\\Normal.txt");
         Sleep(500);
     }  
     //if the life is 0 or the board is still not completed
     else if (p.life == 0 || (status == 1 && p.point < 370)) {
         //display lose status and update the leaderboard
         displayStatus(0);
-        writeLeaderBoard(p, "Normal.txt");
+        writeLeaderBoard(p, "H:\\C C++\\Project_KTLT\\Project_KTLT\\record\\Normal.txt");
         Sleep(500);
     }
     ///if the life is not 0 and point is not negative when finishing the board
@@ -516,7 +516,7 @@ void normalMode(Player& p) {
         system("cls");
         if (c == 'y' || c == 'Y') normalMode(p);
         //if they choose not, update the leaderboard
-        else writeLeaderBoard(p, "Normal.txt");
+        else writeLeaderBoard(p, "H:\\C C++\\Project_KTLT\\Project_KTLT\\record\\Normal.txt");
     }
 
     system("cls");

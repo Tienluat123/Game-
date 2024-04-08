@@ -21,11 +21,11 @@ void printLeaderBoard(char &c) {
     cin >> c;
     string filename;
     if (c == 'n' || c == 'N'){
-        filename = "Normal.txt";
+        filename = "H:\\C C++\\Project_KTLT\\Project_KTLT\\record\\Normal.txt";
     } else if (c == 'h' || c == 'H'){
-        filename = "Hard.txt";
+        filename = "H:\\C C++\\Project_KTLT\\Project_KTLT\\record\\Hard.txt";
     } else if (c == 'i' || c == 'I'){
-        filename = "Hidden.txt";
+        filename = "H:\\C C++\\Project_KTLT\\Project_KTLT\\record\\Hidden.txt";
     } else {
         system("cls");
         return;

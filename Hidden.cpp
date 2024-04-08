@@ -421,14 +421,14 @@ void hiddenMode (Player &p){
     //if players choose ESC
     if (status == 2){
         //update the leaderboard
-        writeLeaderBoard(p, "Hidden.txt");
+        writeLeaderBoard(p, "H:\\C C++\\Project_KTLT\\Project_KTLT\\record\\Hidden.txt");
         Sleep(500);
     }  
     //if the board is still not completed
     else if (status == 1 && p.point < 370) {
         //display lose status and update the leaderboard
         displayStatus(0);
-        writeLeaderBoard(p, "Hidden.txt");
+        writeLeaderBoard(p, "H:\\C C++\\Project_KTLT\\Project_KTLT\\record\\Hidden.txt");
         Sleep(500);
     }
     else {
@@ -444,7 +444,7 @@ void hiddenMode (Player &p){
         system("cls");
         if (c == 'y' || c == 'Y') hiddenMode(p);
         //if they choose not, update the leaderboard
-        else writeLeaderBoard(p, "Hidden.txt");
+        else writeLeaderBoard(p, "H:\\C C++\\Project_KTLT\\Project_KTLT\\record\\Hidden.txt");
     }
 
     system("cls");

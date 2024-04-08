@@ -26,17 +26,24 @@ void controlPvP(Cell_1** board, Position& pos, int& status, Player& p, Position 
                 couple = 2;
                 selectedPos[0] = { -1, -1 };
                 p.life--;
+                p.point -= 10;
                 if (cur_player <= 1) {
                     cur_player = 2;
                     PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                    goToXY(30, 2);
+                    goToXY(10, 2);
                     cout << "Life: " << p.life;
+                    goToXY(10, 1);
+                    cout << "Point: " << p.point;
+                    
                 }
                 else {
                     cur_player = 1;
                     PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                     goToXY(70, 2);
                     cout << "Life: " << p.life;
+                    goToXY(70, 1);
+                    cout << "Point: " << p.point;
+                   
                 }
             } 
             //check the repetition
@@ -80,17 +87,22 @@ void controlPvP(Cell_1** board, Position& pos, int& status, Player& p, Position 
                             Sleep(500);
 
                             p.life--;
+                            p.point -= 10;
                             if (cur_player <= 1) {
                                 cur_player = 2;
                                 goToXY(10, 2);
                                 PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                                 cout << "Life: " << p.life;
+                                goToXY(10, 1);
+                                cout << "Point: " << p.point;
                             }
                             else {
                                 cur_player = 1;
                                 goToXY(70, 2);
                                 PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                                 cout << "Life: " << p.life;
+                                goToXY(70, 1);
+                                cout << "Point: " << p.point;
                             }
                             goToXY(70, 0);
                             PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -103,17 +115,22 @@ void controlPvP(Cell_1** board, Position& pos, int& status, Player& p, Position 
                         Sleep(500);
 
                         p.life--;
+                        p.point -= 10;
                         if (cur_player <= 1) {
                             cur_player = 2;
                             PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                             goToXY(10, 2);
                             cout << "Life: " << p.life;
+                            goToXY(10, 1);
+                            cout << "Point: " << p.point;
                         }
                         else {
                             cur_player = 1;
                             PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\error.wav"), NULL, SND_FILENAME | SND_ASYNC);
                             goToXY(70, 2);
                             cout << "Life: " << p.life;
+                            goToXY(70, 1);
+                            cout << "Point: " << p.point;
                         }
                         
                     }

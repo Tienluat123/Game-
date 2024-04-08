@@ -197,11 +197,12 @@ void control(Cell_2** arr, Position& pos, int& status, Player& p, Position selec
     //if the pressed key is arrow key
     else
     {
-        PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\move.wav"), NULL, SND_FILENAME | SND_ASYNC);
+        
         //check if the box is chosen or not
         if ((pos.y != selectedPos[0].y || pos.x != selectedPos[0].x) && (pos.y != selectedPos[1].y || pos.x != selectedPos[1].x))
             findTheNode(arr, pos.y, pos.x)->selected = 0;
         //movement is similar to the pointer array
+        PlaySound(TEXT("H:\\C C++\\Project_KTLT\\Project_KTLT\\sound\\move.wav"), NULL, SND_FILENAME | SND_ASYNC);
         switch (key = _getch())
         {
         case KEY_UP:
@@ -446,7 +447,7 @@ void hardMode(Player& p) {
         Sleep(500);
     }
     //if the life is 0 or the board is still not completed
-    else if (p.life == 0 || (status == 1 && p.point < 400)) {
+    else if (p.life == 0 || (status == 1 && p.point % 400 != 0)) {
         //display lose status and update the leaderboard
         displayStatus(0);
         writeLeaderBoard(p, "Hard.txt");

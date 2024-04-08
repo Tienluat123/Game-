@@ -339,6 +339,13 @@ void hiddenMode (Player &p){
     //suggestion 
     int suggest = 3;
 
+    goToXY(35, 10);
+    cout << "You have 5 seconds to look through the board. Are you ready ?";
+    goToXY(50, 12);
+    cout << "Press any key to start";
+    _getch();
+    system("cls");
+
     goToXY(10, 0);
     cout << "Name: " << p.name;
     goToXY(40, 0);
@@ -392,7 +399,7 @@ void hiddenMode (Player &p){
 
     //show all board for a second
     renderBoard(board);
-    Sleep(1000);
+    Sleep(5000);
 
     //while status is 0 and life is not 0 
     while (status == 0 && p.life != 0) {

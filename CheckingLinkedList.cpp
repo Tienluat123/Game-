@@ -109,19 +109,15 @@ bool Lcheck(Cell_2** arr, int y1, int x1, int y2, int x2) {
     //check the top corner (x2, y1)
     temp = findTheNode(arr, y1, x2);
     if (temp == NULL) {
-        if (Icheck(arr, y1, x1, y1, x2)) {
-            if (Icheck(arr, y2, x2, y1, x2)) {
-                return true;
-            }
+        if (Icheck(arr, y1, x1, y1, x2) && Icheck(arr, y2, x2, y1, x2)) {
+            return true;
         }
     }
     //check the bottom corner (x1, y2)
     temp = findTheNode(arr, y2, x1);
     if (temp == NULL) {
-        if (Icheck(arr, y1, x1, y2, x1)) {
-            if (Icheck(arr, y2, x2, y2, x1)) {
-                return true;
-            }
+        if (Icheck(arr, y1, x1, y2, x1) && Icheck(arr, y2, x2, y2, x1)) {
+            return true;
         }
     }
 
